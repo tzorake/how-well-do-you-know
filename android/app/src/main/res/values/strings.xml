@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">capacitor-how-well-do-you-know</string>
-    <string name="title_activity_main">capacitor-how-well-do-you-know</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">how-well-do-you-know</string>
+    <string name="title_activity_main">how-well-do-you-know</string>
+    <string name="package_name">com.hwdyk.app</string>
+    <string name="custom_url_scheme">com.hwdyk.app</string>
 </resources>

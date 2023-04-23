@@ -1,36 +1,55 @@
 {
-  "name": "capacitor-how-well-do-you-know",
+  "name": "how-well-do-you-know",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.1",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue && vite build",
-    "preview": "vite preview",
-    "lint": "eslint"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@capacitor/android": "4.7.3",
-    "@capacitor/app": "4.1.1",
-    "@capacitor/core": "4.7.3",
-    "@capacitor/haptics": "4.1.0",
-    "@capacitor/keyboard": "4.1.1",
-    "@capacitor/status-bar": "4.1.1",
-    "@ionic/vue": "^7.0.0",
-    "@ionic/vue-router": "^7.0.0",
-    "ionicons": "^7.0.0",
-    "vue": "^3.2.45",
-    "vue-router": "^4.1.6"
+    "@capacitor/android": "^4.7.3",
+    "@capacitor/cli": "^4.7.3",
+    "@capacitor/core": "^4.7.3",
+    "@capacitor/ios": "^4.7.3",
+    "core-js": "^3.8.3",
+    "vue": "^3.2.13",
+    "vue-router": "^4.0.3",
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
-    "@capacitor/cli": "4.7.3",
-    "@vitejs/plugin-vue": "^4.0.0",
-    "@vue/test-utils": "^2.3.0",
-    "eslint": "^8.35.0",
-    "eslint-plugin-vue": "^9.9.0",
-    "jsdom": "^21.1.0",
-    "vite": "^4.1.0",
-    "vitest": "^0.29.2"
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-vue": "^8.0.3",
+    "prettier": "^2.4.1"
   },
-  "description": "An Ionic project"
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended",
+      "plugin:prettier/recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
 }

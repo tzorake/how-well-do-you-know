@@ -1,7 +1,0 @@
-{
-  "name": "capacitor-how-well-do-you-know",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "vue-vite"
-}
