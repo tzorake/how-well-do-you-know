@@ -41,8 +41,9 @@ const links = [
         :to="link.url"
         :exact="link.exact"
         @click="toggle"
+        class="menu-item"
       >
-        <a href="#" class="menu-item">{{ link.title }}</a>
+        <a href="#">{{ link.title }}</a>
       </router-link>
     </ul>
   </v-modal>
