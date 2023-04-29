@@ -1,3 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+
+.flex-center {
+  @apply flex justify-center items-center;
+}
+
+.menu-item {
+  @apply flex-[1_1_125px] flex-center border-2 rounded-lg shadow-xl hover:bg-primary-light;
+}

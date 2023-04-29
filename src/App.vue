@@ -1,7 +1,11 @@
 <script setup>
-import LevelView from './views/LevelView.vue'
+import MainLayout from '@/layouts/MainLayout'
 </script>
 
 <template>
-  <level-view />
+  <div id="app">
+    <main-layout>
+      <router-view/>
+    </main-layout>
+  </div>
 </template>
