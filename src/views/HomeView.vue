@@ -35,7 +35,7 @@ const items = [
     <div class="flex-center flex-col space-y-2">
       <p>Что за фильм?</p>
       <img
-        class="object-cover aspect-square shadow-lg md:w-5/6"
+        class="object-cover aspect-square shadow-lg md:w-4/6"
         src="@/assets/img1.png"
         alt="image"
       />

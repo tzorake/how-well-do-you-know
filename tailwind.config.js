@@ -3,6 +3,9 @@ module.exports = {
   content: ['./public/**/*.html', './src/**/*.{vue,js,ts,jsx,tsx}'],
   theme: {
     extend: {
+      screens: {
+        sm: { raw: '(min-height: 700px)' }
+      },
       colors: {
         primary: {
           // cyan
