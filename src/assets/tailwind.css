@@ -8,6 +8,6 @@
 }
 
 .menu-item {
-  @apply flex-[1_1_125px] flex-center border-2 border-border-color rounded-lg shadow-xl select-none hover:bg-primary-light;
+  @apply flex-center h-12 border-2 border-border-color rounded-lg shadow-xl select-none hover:bg-primary-light;
 }
 

@@ -20,7 +20,7 @@ const items = [
 </script>
 
 <template>
-  <div class="h-screen grid grid-rows-[auto_2fr_1fr] gap-3">
+  <div class="h-screen grid grid-rows-[auto_2fr_1fr] gap-2">
     <div class="flex-center">
       <div class="w-full flex justify-end space-x-3">
         <v-button color="success"> Уровень 1 </v-button>
@@ -35,7 +35,7 @@ const items = [
     <div class="flex-center flex-col space-y-2">
       <p>Что за фильм?</p>
       <img
-        class="object-cover aspect-square md:w-5/6"
+        class="object-cover aspect-square shadow-lg md:w-5/6"
         src="@/assets/img1.png"
         alt="image"
       />
@@ -44,7 +44,7 @@ const items = [
         <div class="w-1/12 text-center border-b-4 border-border-color"></div>
       </div>
     </div>
-    <div class="mb-3 flex flex-col justify-end space-y-5">
+    <div class="mb-3 flex justify-center flex-col space-y-5">
       <div class="flex space-x-3">
         <v-button color="success" class="flex-1"> Помощь друзей </v-button>
         <v-button color="help" class="flex-1"> Подсказки </v-button>

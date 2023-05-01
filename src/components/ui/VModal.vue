@@ -14,10 +14,10 @@ const closeModal = () => {
 <template>
   <div
     v-if="visible"
-    class="absolute h-screen w-full py-5 grid grid-rows-[auto_1fr_auto] gap-10 text-center bg-primary-dark"
+    class="absolute h-screen w-full grid grid-rows-[auto_,1fr_,auto] gap-10 text-center bg-primary-dark"
   >
-    <p class="underline" @click="closeModal">Закрыть</p>
-    <slot class="h-4/6" />
-    <p class="text-lg md:text-4xl">Created by ANTONINIK / TZORAKE</p>
+    <p class="underline mt-2" @click="closeModal">Закрыть</p>
+    <slot />
+    <p class="mb-2">Created by ANTONINIK / TZORAKE</p>
   </div>
 </template>

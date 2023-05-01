@@ -23,7 +23,11 @@ module.exports = {
           light: '#10b981', // 500
           DEFAULT: '#059669' // 600
         },
-        warn: '#f97316', // orange-500
+        warn: {
+          // orange
+          light: '#fb923c', //400
+          DEFAULT: '#f97316' // 500
+        },
         error: '#ef4444', // red-500
         help: {
           //purple

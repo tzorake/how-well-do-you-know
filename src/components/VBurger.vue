@@ -21,7 +21,7 @@ const links = [
     viewBox="0 0 24 24"
     stroke-width="1.5"
     stroke="white"
-    class="w-10 h-10 absolute"
+    class="w-8 h-8 absolute opacity-90"
     @click="toggle"
     v-if="switcher"
   >
@@ -32,7 +32,7 @@ const links = [
     />
   </svg>
   <v-modal v-else @on-close="toggle">
-    <ul class="flex flex-col h-1/2 w-3/4 mx-auto gap-5">
+    <ul class="flex flex-col w-3/4 mx-auto gap-5">
       <router-link
         v-for="link in links"
         :key="link.url"
