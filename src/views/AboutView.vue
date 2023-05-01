@@ -1,12 +1,12 @@
 <template>
-  <div class="px-5 py-16 flex items-center flex-col space-y-5">
+  <div class="flex items-center flex-col py-5 space-y-5">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       stroke-width="1.5"
       stroke="white"
-      class="w-16 h-16"
+      class="w-1/6 h-1/6"
     >
       <path
         stroke-linecap="round"

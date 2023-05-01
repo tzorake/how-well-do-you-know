@@ -1,43 +1,63 @@
+<script setup>
+import VButton from '@/components/ui/VButton.vue'
+import VCoin from '@/components/ui/VCoin.vue'
+const items = [
+  'Д',
+  'Ж',
+  'О',
+  'П',
+  'A',
+  'В',
+  'И',
+  'К',
+  'A',
+  'Т',
+  'Ы',
+  'A',
+  'Б',
+  'Д',
+]
+</script>
 
 <template>
-	<div class="flex flex-col h-screen bg-teal-700">
-        <header class="flex justify-between items-center mx-1">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="white" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/>
-                </svg>
-                <div class="flex gap-1">
-                    <button class="bg-lime-500 px-2 py-1 rounded-md text-white">Уровень 1</button>
-                    <button class="flex gap-1 bg-fuchsia-500 px-2 py-1 rounded-md text-white">
-                        <div>500</div>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 fill-yellow-300 stroke-yellow-600">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
-                        </svg>
-                    </button>
-                </div>
-        </header>
-        <main class="">
-            <div class="flex flex-col items-center">
-                <div class="mt-4 mb-2 text-white">
-                    <p>Что за фильм?</p>
-                </div>
-                <img class="object-cover aspect-square w-3/4" src="@/assets/img1.png" alt="image">
-
-            </div>
-            <div class="flex justify-center gap-2 my-4">
-                <div class="flex border-b-4 border-cyan-300 justify-center text-white font-bold text-xl w-8 h-8">A</div>
-                <div class="flex border-b-4 border-cyan-300 justify-center text-white font-bold text-xl w-8 h-8">B</div>
-            </div>
-            <div class="flex justify-around">
-                <button class="bg-lime-500 px-2 py-1 rounded-md text-white w-2/5">Помощь друзей</button>
-                <button class="bg-fuchsia-500 px-2 py-1 rounded-md text-white w-2/5">Подсказки</button>
-            </div>
-            <div class="flex flex-wrap justify-center gap-2 my-4 px-4">
-                <div class="flex justify-center bg-orange-500 text-white font-bold text-xl w-8 h-8 rounded-md" v-for="item in items">{{ item }}</div>
-            </div>
-        </main>
-	</div>
+  <div class="h-screen grid grid-rows-[auto_2fr_1fr] gap-3">
+    <div class="flex-center">
+      <div class="w-full flex justify-end space-x-3">
+        <v-button color="success"> Уровень 1 </v-button>
+        <v-button color="help">
+          <div class="flex-center space-x-1">
+            <span>500</span>
+            <v-coin />
+          </div>
+        </v-button>
+      </div>
+    </div>
+    <div class="flex-center flex-col space-y-2">
+      <p>Что за фильм?</p>
+      <img
+        class="object-cover aspect-square md:w-5/6"
+        src="@/assets/img1.png"
+        alt="image"
+      />
+      <div class="w-full flex justify-center space-x-2">
+        <div class="w-1/12 text-center border-b-4 border-cyan-300">A</div>
+        <div class="w-1/12 text-center border-b-4 border-border-color"></div>
+      </div>
+    </div>
+    <div class="mb-3 flex flex-col justify-end space-y-5">
+      <div class="flex space-x-3">
+        <v-button color="success" class="flex-1"> Помощь друзей </v-button>
+        <v-button color="help" class="flex-1"> Подсказки </v-button>
+      </div>
+      <div class="grid grid-cols-7 gap-2">
+        <v-button
+          color="warn"
+          class="flex font-bold"
+          v-for="item in items"
+        >
+          {{ item }}
+        </v-button>
+      </div>
+    </div>
+  </div>
 </template>
-
-<script setup>
-    const items = ['Д', 'Ж', 'О', 'П', 'A', 'В', 'И', 'К', 'A', 'Т', 'Ы', 'A', 'Б', 'Д', 'В'];
-</script>
