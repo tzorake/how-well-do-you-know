@@ -3,9 +3,9 @@ import VBurger from '@/components/VBurger.vue';
 </script>
 
 <template>
-  <div class="app-container relative">
+  <div class="app-container">
     <v-burger />
-    <div class="content px-3">
+    <div class="content">
       <router-view />
     </div>
   </div>
