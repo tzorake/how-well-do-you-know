@@ -33,26 +33,26 @@ const items = [
       </div>
     </div>
     <div class="flex-center flex-col space-y-2">
-      <p>Что за фильм?</p>
+      <p class="font-bold">Что за фильм?</p>
       <img
         class="object-cover aspect-square shadow-lg md:w-4/6"
         src="@/assets/img1.png"
         alt="image"
       />
       <div class="w-full flex justify-center space-x-2">
-        <div class="w-1/12 text-center border-b-4 border-cyan-300">A</div>
-        <div class="w-1/12 text-center border-b-4 border-border-color"></div>
+        <div class="w-1/12 text-xl text-center border-b-4 border-cyan-300">A</div>
+        <div class="w-1/12 text-xl text-center border-b-4 border-border-color"></div>
       </div>
     </div>
-    <div class="mb-3 flex justify-center flex-col space-y-5">
+    <div class="flex justify-center flex-col space-y-3">
       <div class="flex space-x-3">
         <v-button color="success" class="flex-1"> Помощь друзей </v-button>
         <v-button color="help" class="flex-1"> Подсказки </v-button>
       </div>
-      <div class="grid grid-cols-7 gap-2">
+      <div class="grid grid-cols-letters gap-[0.35rem]">
         <v-button
           color="warn"
-          class="flex font-bold"
+          class="font-bold"
           v-for="item in items"
         >
           {{ item }}

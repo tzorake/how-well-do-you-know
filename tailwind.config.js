@@ -6,6 +6,9 @@ module.exports = {
       screens: {
         sm: { raw: '(min-height: 700px)' }
       },
+      gridTemplateColumns: {
+        'letters': 'repeat(7, minmax(max(42px, (100% - 3rem )/7), 1fr))'
+      },
       colors: {
         primary: {
           // cyan
@@ -13,7 +16,6 @@ module.exports = {
           DEFAULT: '#0e7490', // 700
           dark: '#164e63' // 900
         },
-
         secondary: {
           // indigo
           light: '#a5b4fc', // 300

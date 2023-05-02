@@ -5,7 +5,7 @@ import VBurger from '@/components/VBurger.vue';
 <template>
   <div class="app-container">
     <v-burger />
-    <div class="content">
+    <div class="content px-2">
       <router-view />
     </div>
   </div>
