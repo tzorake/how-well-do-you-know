@@ -7,7 +7,7 @@ module.exports = {
         sm: { raw: '(min-height: 700px)' }
       },
       gridTemplateColumns: {
-        'letters': 'repeat(7, minmax(max(42px, (100% - 3rem )/7), 1fr))'
+        'letters': 'repeat(7, minmax(max(42px, (100% - 1.8rem )/7), 1fr))'
       },
       colors: {
         primary: {

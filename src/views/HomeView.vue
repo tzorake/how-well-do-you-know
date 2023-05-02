@@ -49,7 +49,7 @@ const items = [
         <v-button color="success" class="flex-1"> Помощь друзей </v-button>
         <v-button color="help" class="flex-1"> Подсказки </v-button>
       </div>
-      <div class="grid grid-cols-letters gap-[0.35rem]">
+      <div class="grid grid-cols-letters gap-[0.3rem]">
         <v-button
           color="warn"
           class="font-bold"
