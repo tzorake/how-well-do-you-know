@@ -1,9 +1,11 @@
 <template>
-  <ion-app>
-    <ion-router-outlet />
-  </ion-app>
+  <Suspense>
+    <router-view class="view"></router-view>
+  </Suspense>
 </template>
 
-<script setup lang="ts">
-import { IonApp, IonRouterOutlet } from '@ionic/vue';
+<script setup>
 </script>
+
+<style scoped>
+</style>

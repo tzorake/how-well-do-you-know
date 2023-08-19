@@ -1,43 +1,45 @@
 {
-  "name": "my-app",
+  "name": "how-well-do-you-know-pure-vue",
+  "version": "0.1.0",
   "private": true,
-  "version": "0.0.1",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview",
-    "test:e2e": "cypress run",
-    "test:unit": "vitest",
-    "lint": "eslint"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@capacitor/app": "5.0.6",
-    "@capacitor/core": "5.2.3",
-    "@capacitor/haptics": "5.0.6",
-    "@capacitor/keyboard": "5.0.6",
-    "@capacitor/status-bar": "5.0.6",
-    "@ionic/vue": "^7.0.0",
-    "@ionic/vue-router": "^7.0.0",
-    "ionicons": "^7.0.0",
-    "vue": "^3.2.45",
-    "vue-router": "^4.1.6"
+    "core-js": "^3.8.3",
+    "vue": "^3.2.13",
+    "vue-router": "^4.2.4",
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
-    "@capacitor/cli": "5.2.3",
-    "@vitejs/plugin-legacy": "^4.0.2",
-    "@vitejs/plugin-vue": "^4.0.0",
-    "@vue/eslint-config-typescript": "^11.0.2",
-    "@vue/test-utils": "^2.3.0",
-    "cypress": "^12.7.0",
-    "eslint": "^8.35.0",
-    "eslint-plugin-vue": "^9.9.0",
-    "jsdom": "^22.1.0",
-    "prettier": "3.0.1",
-    "typescript": "^5.1.6",
-    "vite": "^4.3.9",
-    "vitest": "^0.32.2",
-    "vue-tsc": "^1.0.24"
+    "@babel/core": "^7.12.16",
+    "@babel/eslint-parser": "^7.12.16",
+    "@vue/cli-plugin-babel": "~5.0.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3"
   },
-  "description": "An Ionic project"
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "node": true
+    },
+    "extends": [
+      "plugin:vue/vue3-essential",
+      "eslint:recommended"
+    ],
+    "parserOptions": {
+      "parser": "@babel/eslint-parser"
+    },
+    "rules": {}
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ]
 }
