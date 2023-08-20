@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { IonPage } from "@ionic/vue";
+import BackLayout from "@/layouts/BackLayout.vue";
 </script>
 
 <template>
-  <ion-page>ContactView</ion-page>
+  <back-layout title="Контакты"> Contact </back-layout>
 </template>
 
 <style scoped></style>

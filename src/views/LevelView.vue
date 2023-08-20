@@ -8,18 +8,20 @@ import {
   IonContent,
   IonMenuButton,
   IonButton,
-  IonLabel,
-  IonTabButton,
-  IonTabs,
   IonPage,
   IonMenuToggle,
   IonIcon,
   IonItem,
-  IonTabBar,
-  IonRouterOutlet,
+  IonFooter,
 } from "@ionic/vue";
 import AppLetter from "@/components/LevelView/AppLetter.vue";
-import { diamondOutline } from "ionicons/icons";
+import {
+  diamondOutline,
+  playForwardOutline,
+  desktopOutline,
+  trashBinOutline,
+  eyeOutline,
+} from "ionicons/icons";
 import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
@@ -31,6 +33,13 @@ import { useData } from "@/services/fetchApi";
 
 const router = useRouter();
 const route = useRoute();
+const paths = [
+  { name: "Алмазы", url: "/diamond" },
+  { name: "Поделиться", url: "/share" },
+  { name: "Об игре", url: "/about" },
+  { name: "Контакты", url: "/contact" },
+];
+
 const id = route.params.id as string;
 
 const levels = await useData("/levels/levels.json");
@@ -103,9 +112,9 @@ watch(isLevelFinished, () => {
           <ion-title>Меню</ion-title>
         </ion-toolbar>
       </ion-header>
-      <ion-content class="ion-padding">
-        <IonMenuToggle :autoHide="false">
-          <IonItem> Об игре </IonItem>
+      <ion-content>
+        <IonMenuToggle v-for="path in paths" :key="path.name" :autoHide="false">
+          <IonItem :routerLink="path.url" router-direction="forward"> {{ path.name }} </IonItem>
         </IonMenuToggle>
       </ion-content>
     </ion-menu>
@@ -131,7 +140,9 @@ watch(isLevelFinished, () => {
       <!-- CONTENT -->
       <ion-content class="ion-no-padding" :scroll-y="false">
         <div class="level-title">
-          <p>{{ levelTitle }}</p>
+          <p class="level-title__text">
+            {{ levelTitle }}
+          </p>
         </div>
         <img class="level-image" alt="level-image" :src="imageSrc" />
 
@@ -147,7 +158,10 @@ watch(isLevelFinished, () => {
               {{ letter(index(i, j)) }}
             </div>
 
-            <div class="letter-placeholder transparent" v-if="i !== actualAnswerWords.length - 1"> </div>
+            <div
+              class="letter-placeholder transparent"
+              v-if="i !== actualAnswerWords.length - 1"
+            ></div>
           </template>
         </div>
 
@@ -164,7 +178,9 @@ watch(isLevelFinished, () => {
                 rowIndex * rowLength
               )"
               :key="i"
-              :style="{ width: `calc((100% - ${rowLength - 1}*0.5rem) / ${rowLength})` }"
+              :style="{
+                width: `calc((100% - ${rowLength - 1}*0.5rem) / ${rowLength})`,
+              }"
               @click="onAddLetter((rowIndex - 1) * rowLength + i)"
               >{{ letter }}
             </AppLetter>
@@ -173,32 +189,47 @@ watch(isLevelFinished, () => {
       </ion-content>
 
       <!-- FOOTER -->
-      <!-- <ion-tabs>
-        <IonRouterOutlet></IonRouterOutlet>
-        <ion-tab-bar slot="bottom" color="secondary">
-          <ion-tab-button tab="show">
-            <ion-label color="light">Показать букву</ion-label>
-          </ion-tab-button>
-
-          <ion-tab-button tab="remove">
-            <ion-label color="light">Убрать лишние</ion-label>
-          </ion-tab-button>
-
-          <ion-tab-button tab="skip">
-            <ion-label color="light">Пройти уровень</ion-label>
-          </ion-tab-button>
-        </ion-tab-bar>
-      </ion-tabs> -->
+      <ion-footer>
+        <div class="footer">
+          <ion-button shape="round" fill="outline" color="tertiary">
+            <ion-icon size="large" slot="start" :icon="eyeOutline"></ion-icon>
+            <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
+          </ion-button>
+          <ion-button shape="round" fill="outline" color="tertiary">
+            <ion-icon
+              size="large"
+              slot="start"
+              :icon="trashBinOutline"
+            ></ion-icon>
+            <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon
+          ></ion-button>
+          <ion-button shape="round" fill="outline" color="tertiary">
+            <ion-icon
+              size="large"
+              slot="start"
+              :icon="playForwardOutline"
+            ></ion-icon>
+            <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-footer>
     </ion-page>
   </div>
 </template>
 
 <style scoped>
 .level-title {
-  height: 5%;
-  font-size: 17px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 10%;
   font-weight: 600;
-  text-align: center;
+}
+
+.level-title__text {
+  display: inline-block;
+  margin: 0;
 }
 
 .level-image {
@@ -222,10 +253,13 @@ watch(isLevelFinished, () => {
   align-items: center;
   user-select: none;
   border-bottom: 3px solid var(--ion-color-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  text-transform: uppercase;
 }
 
 .letter-picker {
-  height: 35%;
+  height: 30%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -234,7 +268,7 @@ watch(isLevelFinished, () => {
 }
 
 .row {
-  width: calc(100% - 2*0.5rem);
+  width: calc(100% - 2 * 0.5rem);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -244,5 +278,17 @@ watch(isLevelFinished, () => {
 
 .transparent {
   opacity: 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 56px;
+}
+
+ion-button {
+  --padding-start: 1.2rem;
+  --padding-end: 1.2rem;
 }
 </style>
