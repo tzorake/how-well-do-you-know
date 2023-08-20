@@ -5,59 +5,235 @@ import {
   IonToolbar,
   IonMenu,
   IonTitle,
-  IonPage,
   IonContent,
   IonMenuButton,
   IonButton,
   IonLabel,
+  IonTabButton,
+  IonTabs,
+  IonPage,
+  IonMenuToggle,
+  IonIcon,
+  IonItem,
+  IonTabBar,
+  IonRouterOutlet,
 } from "@ionic/vue";
+import AppLetter from "@/components/LevelView/AppLetter.vue";
+import { diamondOutline } from "ionicons/icons";
+import { computed, ref, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import {
+  insertCharacterAtIndex,
+  removeCharacterAtIndex,
+  shuffle,
+} from "@/utils/StringUtils";
+import { useData } from "@/services/fetchApi";
+
+const router = useRouter();
+const route = useRoute();
+const id = route.params.id as string;
+
+const levels = await useData("/levels/levels.json");
+const mixin = computed(() => levels[id].mixin);
+const imageSrc = computed(() => {
+  return levels[id].image;
+});
+const levelTitle = computed(() => levels.title);
+
+const actualAnswerLetters = computed(() => {
+  return actualAnswer.value.replaceAll(" ", "");
+});
+
+const actualAnswer = computed(() => levels[id].actual_answer);
+
+const actualAnswerWords = computed(() => {
+  return actualAnswer.value.split(" ");
+});
+
+const rowLength = ref<number>(9);
+
+const userAnswer = ref("");
+
+const onRemoveLetter = (index: number) => {
+  userAnswer.value = removeCharacterAtIndex(userAnswer.value, index);
+};
+
+const mixedLetters = computed(() => {
+  const word = actualAnswerLetters.value + mixin.value;
+
+  return shuffle(word);
+});
+
+const onAddLetter = (index: number) => {
+  if (userAnswer.value.length < actualAnswerLetters.value.length) {
+    userAnswer.value = insertCharacterAtIndex(
+      userAnswer.value,
+      userAnswer.value.length,
+      mixedLetters.value[index]
+    );
+  }
+};
+
+const letter = (index: number) => {
+  return index < userAnswer.value.length ? userAnswer.value.at(index) : "";
+};
+
+const index = (i: number, j: any) => {
+  return (
+    actualAnswerWords.value
+      .filter((_: any, idx: number) => idx < i)
+      .reduce((prev: any, curr: string | any[]) => prev + curr.length, 0) + j
+  );
+};
+
+const isLevelFinished = computed(() => {
+  return actualAnswerLetters.value === userAnswer.value;
+});
+
+watch(isLevelFinished, () => {
+  router.push({ path: "/next-level/" + id });
+});
 </script>
 
 <template>
-  <ion-menu content-id="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Menu Content</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">This is the menu content.</ion-content>
-  </ion-menu>
-  <ion-page id="main-content">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button></ion-menu-button>
-        </ion-buttons>
-        <ion-buttons slot="end">
-          <ion-button>Default</ion-button>
-          <ion-button>Default</ion-button>
-        </ion-buttons>
-        <ion-title></ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content class="ion-padding">
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>Card Title</ion-card-title>
-        </ion-card-header>
-        <img
-          alt="Silhouette of mountains"
-          src="https://ionicframework.com/docs/img/demos/card-media.png"
-        />
-        <ion-card-content>
-          Here's a small text description for the card content. Nothing more,
-          nothing less.
-        </ion-card-content>
-      </ion-card>
-      <ion-grid>
-        <ion-row>
-          <ion-col><IonButton expand="full">A</IonButton></ion-col>
-          <ion-col><IonButton expand="full">B</IonButton></ion-col>
-          <ion-col><IonButton expand="full">C</IonButton></ion-col>
-        </ion-row>
-      </ion-grid>
-    </ion-content>
-  </ion-page>
+  <div>
+    <ion-menu content-id="main-content">
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Меню</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <IonMenuToggle :autoHide="false">
+          <IonItem> Об игре </IonItem>
+        </IonMenuToggle>
+      </ion-content>
+    </ion-menu>
+
+    <!-- HEADER -->
+    <ion-page id="main-content">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+          <ion-buttons slot="end">
+            <ion-button>Уровень: 1</ion-button>
+            <ion-button
+              >600
+              <ion-icon slot="end" :icon="diamondOutline"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+          <ion-title></ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <!-- CONTENT -->
+      <ion-content class="ion-no-padding" :scroll-y="false">
+        <p class="level-title">{{ levelTitle }}</p>
+        <img class="level-image" alt="level-image" :src="imageSrc" />
+
+        <!-- USER-ANSWER -->
+        <div class="user-answer">
+          <template v-for="(word, i) in actualAnswerWords" :key="i">
+            <div
+              v-for="(_, j) in word"
+              :key="`${i},${j}`"
+              @click="onRemoveLetter(index(i, j))"
+              class="letter-placeholder"
+            >
+              {{ letter(index(i, j)) }}
+            </div>
+          </template>
+        </div>
+
+        <!-- LETTER-PICKER -->
+        <div class="letter-picker">
+          <div
+            class="row"
+            v-for="rowIndex in Math.ceil(mixedLetters.length / rowLength)"
+            :key="rowIndex"
+          >
+            <AppLetter
+              v-for="(letter, i) in mixedLetters.slice(
+                (rowIndex - 1) * rowLength,
+                rowIndex * rowLength
+              )"
+              :key="i"
+              @click="onAddLetter((rowIndex - 1) * rowLength + i)"
+              >{{ letter }}
+            </AppLetter>
+          </div>
+        </div>
+      </ion-content>
+
+      <!-- FOOTER -->
+      <ion-tabs>
+        <IonRouterOutlet></IonRouterOutlet>
+        <ion-tab-bar slot="bottom" color="secondary">
+          <ion-tab-button tab="show">
+            <ion-label color="light">Показать букву</ion-label>
+          </ion-tab-button>
+
+          <ion-tab-button tab="remove">
+            <ion-label color="light">Убрать лишние</ion-label>
+          </ion-tab-button>
+
+          <ion-tab-button tab="skip">
+            <ion-label color="light">Пройти уровень</ion-label>
+          </ion-tab-button>
+        </ion-tab-bar>
+      </ion-tabs>
+    </ion-page>
+  </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.level-title {
+  font-size: 17px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.level-image {
+  height: 50%;
+  width: 100%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+}
+.user-answer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.letter-placeholder {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  border-bottom: 3px solid var(--ion-color-primary);
+}
+
+.letter-picker {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100px;
+}
+
+.transparent {
+  opacity: 0;
+}
+</style>

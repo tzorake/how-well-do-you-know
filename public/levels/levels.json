@@ -1,0 +1,13 @@
+{
+  "title": "Что за фильм?",
+  "1": {
+    "actual_answer": "foo bar",
+    "mixin": "qwejmssmzfma",
+    "image": "/levels/img/john_wick.png"
+  },
+  "2": {
+    "actual_answer": "bar foo",
+    "mixin": "jkfbzxndfjaj",
+    "image": "/levels/img/shadow_fiend.png"
+  }
+}
