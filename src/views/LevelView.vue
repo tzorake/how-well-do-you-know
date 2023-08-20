@@ -105,116 +105,116 @@ watch(isLevelFinished, () => {
 </script>
 
 <template>
-  <div>
+  <ion-page>
     <ion-menu content-id="main-content">
       <ion-header>
-        <ion-toolbar>
+        <ion-toolbar color="primary">
           <ion-title>Меню</ion-title>
         </ion-toolbar>
       </ion-header>
       <ion-content>
         <IonMenuToggle v-for="path in paths" :key="path.name" :autoHide="false">
-          <IonItem :routerLink="path.url" router-direction="forward"> {{ path.name }} </IonItem>
+          <IonItem :routerLink="path.url" router-direction="forward">
+            {{ path.name }}
+          </IonItem>
         </IonMenuToggle>
       </ion-content>
     </ion-menu>
 
     <!-- HEADER -->
-    <ion-page id="main-content">
-      <ion-header>
-        <ion-toolbar color="primary">
-          <ion-buttons slot="start">
-            <ion-menu-button></ion-menu-button>
-          </ion-buttons>
-          <ion-buttons slot="end">
-            <ion-button>Уровень: 1</ion-button>
-            <ion-button
-              >600
-              <ion-icon slot="end" :icon="diamondOutline"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-          <ion-title></ion-title>
-        </ion-toolbar>
-      </ion-header>
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button>Уровень: 1</ion-button>
+          <ion-button
+            >600
+            <ion-icon slot="end" :icon="diamondOutline"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+        <ion-title></ion-title>
+      </ion-toolbar>
+    </ion-header>
 
-      <!-- CONTENT -->
-      <ion-content class="ion-no-padding" :scroll-y="false">
-        <div class="level-title">
-          <p class="level-title__text">
-            {{ levelTitle }}
-          </p>
-        </div>
-        <img class="level-image" alt="level-image" :src="imageSrc" />
+    <!-- CONTENT -->
+    <ion-content id="main-content" class="ion-no-padding" :scroll-y="false">
+      <div class="level-title">
+        <p class="level-title__text">
+          {{ levelTitle }}
+        </p>
+      </div>
+      <img class="level-image" alt="level-image" :src="imageSrc" />
 
-        <!-- USER-ANSWER -->
-        <div class="user-answer">
-          <template v-for="(word, i) in actualAnswerWords" :key="i">
-            <div
-              v-for="(_, j) in word"
-              :key="`${i},${j}`"
-              @click="onRemoveLetter(index(i, j))"
-              class="letter-placeholder"
-            >
-              {{ letter(index(i, j)) }}
-            </div>
-
-            <div
-              class="letter-placeholder transparent"
-              v-if="i !== actualAnswerWords.length - 1"
-            ></div>
-          </template>
-        </div>
-
-        <!-- LETTER-PICKER -->
-        <div class="letter-picker">
+      <!-- USER-ANSWER -->
+      <div class="user-answer">
+        <template v-for="(word, i) in actualAnswerWords" :key="i">
           <div
-            class="row"
-            v-for="rowIndex in Math.ceil(mixedLetters.length / rowLength)"
-            :key="rowIndex"
+            v-for="(_, j) in word"
+            :key="`${i},${j}`"
+            @click="onRemoveLetter(index(i, j))"
+            class="letter-placeholder"
           >
-            <AppLetter
-              v-for="(letter, i) in mixedLetters.slice(
-                (rowIndex - 1) * rowLength,
-                rowIndex * rowLength
-              )"
-              :key="i"
-              :style="{
-                width: `calc((100% - ${rowLength - 1}*0.5rem) / ${rowLength})`,
-              }"
-              @click="onAddLetter((rowIndex - 1) * rowLength + i)"
-              >{{ letter }}
-            </AppLetter>
+            {{ letter(index(i, j)) }}
           </div>
-        </div>
-      </ion-content>
 
-      <!-- FOOTER -->
-      <ion-footer>
-        <div class="footer">
-          <ion-button shape="round" fill="outline" color="tertiary">
-            <ion-icon size="large" slot="start" :icon="eyeOutline"></ion-icon>
-            <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
-          </ion-button>
-          <ion-button shape="round" fill="outline" color="tertiary">
-            <ion-icon
-              size="large"
-              slot="start"
-              :icon="trashBinOutline"
-            ></ion-icon>
-            <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon
-          ></ion-button>
-          <ion-button shape="round" fill="outline" color="tertiary">
-            <ion-icon
-              size="large"
-              slot="start"
-              :icon="playForwardOutline"
-            ></ion-icon>
-            <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
-          </ion-button>
+          <div
+            class="letter-placeholder transparent"
+            v-if="i !== actualAnswerWords.length - 1"
+          ></div>
+        </template>
+      </div>
+
+      <!-- LETTER-PICKER -->
+      <div class="letter-picker">
+        <div
+          class="row"
+          v-for="rowIndex in Math.ceil(mixedLetters.length / rowLength)"
+          :key="rowIndex"
+        >
+          <AppLetter
+            v-for="(letter, i) in mixedLetters.slice(
+              (rowIndex - 1) * rowLength,
+              rowIndex * rowLength
+            )"
+            :key="i"
+            :style="{
+              width: `calc((100% - ${rowLength - 1}*0.5rem) / ${rowLength})`,
+            }"
+            @click="onAddLetter((rowIndex - 1) * rowLength + i)"
+            >{{ letter }}
+          </AppLetter>
         </div>
-      </ion-footer>
-    </ion-page>
-  </div>
+      </div>
+    </ion-content>
+
+    <!-- FOOTER -->
+    <ion-footer>
+      <div class="footer">
+        <ion-button shape="round" fill="outline" color="tertiary">
+          <ion-icon size="large" slot="start" :icon="eyeOutline"></ion-icon>
+          <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
+        </ion-button>
+        <ion-button shape="round" fill="outline" color="tertiary">
+          <ion-icon
+            size="large"
+            slot="start"
+            :icon="trashBinOutline"
+          ></ion-icon>
+          <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon
+        ></ion-button>
+        <ion-button shape="round" fill="outline" color="tertiary">
+          <ion-icon
+            size="large"
+            slot="start"
+            :icon="playForwardOutline"
+          ></ion-icon>
+          <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
+        </ion-button>
+      </div>
+    </ion-footer>
+  </ion-page>
 </template>
 
 <style scoped>
