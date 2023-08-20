@@ -130,7 +130,9 @@ watch(isLevelFinished, () => {
 
       <!-- CONTENT -->
       <ion-content class="ion-no-padding" :scroll-y="false">
-        <p class="level-title">{{ levelTitle }}</p>
+        <div class="level-title">
+          <p>{{ levelTitle }}</p>
+        </div>
         <img class="level-image" alt="level-image" :src="imageSrc" />
 
         <!-- USER-ANSWER -->
@@ -144,6 +146,8 @@ watch(isLevelFinished, () => {
             >
               {{ letter(index(i, j)) }}
             </div>
+
+            <div class="letter-placeholder transparent" v-if="i !== actualAnswerWords.length - 1"> </div>
           </template>
         </div>
 
@@ -160,6 +164,7 @@ watch(isLevelFinished, () => {
                 rowIndex * rowLength
               )"
               :key="i"
+              :style="{ width: `calc((100% - ${rowLength - 1}*0.5rem) / ${rowLength})` }"
               @click="onAddLetter((rowIndex - 1) * rowLength + i)"
               >{{ letter }}
             </AppLetter>
@@ -168,7 +173,7 @@ watch(isLevelFinished, () => {
       </ion-content>
 
       <!-- FOOTER -->
-      <ion-tabs>
+      <!-- <ion-tabs>
         <IonRouterOutlet></IonRouterOutlet>
         <ion-tab-bar slot="bottom" color="secondary">
           <ion-tab-button tab="show">
@@ -183,13 +188,14 @@ watch(isLevelFinished, () => {
             <ion-label color="light">Пройти уровень</ion-label>
           </ion-tab-button>
         </ion-tab-bar>
-      </ion-tabs>
+      </ion-tabs> -->
     </ion-page>
   </div>
 </template>
 
 <style scoped>
 .level-title {
+  height: 5%;
   font-size: 17px;
   font-weight: 600;
   text-align: center;
@@ -199,14 +205,13 @@ watch(isLevelFinished, () => {
   height: 50%;
   width: 100%;
   object-fit: cover;
-  margin-bottom: 1rem;
 }
 .user-answer {
+  height: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 1rem;
 }
 
 .letter-placeholder {
@@ -220,17 +225,21 @@ watch(isLevelFinished, () => {
 }
 
 .letter-picker {
+  height: 35%;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 0.5rem;
 }
 
 .row {
+  width: calc(100% - 2*0.5rem);
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 0.5rem;
-  height: 100px;
+  margin: 0 0.5rem;
 }
 
 .transparent {

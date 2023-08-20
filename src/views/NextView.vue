@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { IonPage } from "@ionic/vue";
+import { IonPage, IonContent } from "@ionic/vue";
 </script>
 
 <template>
-  <ion-page>NextView</ion-page>
+  <ion-page>
+    <ion-content>NextLevel</ion-content>
+  </ion-page>
 </template>
 
 <style scoped></style>

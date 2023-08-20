@@ -3,13 +3,13 @@ import { IonButton } from "@ionic/vue";
 </script>
 
 <template>
-  <ion-button color="warning">
+  <ion-button expand="full" class="ion-no-margin" color="warning">
     <slot></slot>
   </ion-button>
 </template>
 
 <style scoped>
 ion-button::part(native) {
-  height: 30%;
+  aspect-ratio: 1 / 1;
 }
 </style>
