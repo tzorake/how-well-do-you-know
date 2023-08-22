@@ -19,7 +19,7 @@ import { diamondOutline } from "ionicons/icons";
           :icon="diamondOutline"
         />
         <strong>+500</strong>
-        <span>Посмотрите видео</span>
+        <span>Посмотреть видео</span>
       </div>
     </ion-button>
     <ion-button
