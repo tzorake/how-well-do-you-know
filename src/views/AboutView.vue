@@ -26,12 +26,11 @@ import BackLayout from "@/layouts/BackLayout.vue";
 .about__text {
   margin: 1rem;
   font-size: 1.1rem;
-  word-spacing: 0.5rem;
-  letter-spacing: 0.1rem;
-  text-align: center;
+  text-align: justify-all;
 }
 
 .about__authors {
   margin-top: auto;
+  margin: auto auto 1rem auto
 }
 </style>
