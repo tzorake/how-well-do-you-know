@@ -49,3 +49,13 @@ export function findSpaceIndexes(inputString: string): number[] {
 
   return indexes;
 }
+
+export function replaceCharAtIndex(inputString: string, index: number, replacementChar: string): string {
+  if (index < 0 || index >= inputString.length) {
+    throw new Error("Index out of range");
+  }
+
+  const charArray = inputString.split('');
+  charArray[index] = replacementChar;
+  return charArray.join('');
+}

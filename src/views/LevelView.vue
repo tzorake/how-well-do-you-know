@@ -22,11 +22,11 @@ import {
   trashBinOutline,
   eyeOutline,
 } from "ionicons/icons";
-import { computed, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import {
   insertCharacterAtIndex,
-  removeCharacterAtIndex,
+  replaceCharAtIndex,
   shuffle,
 } from "@/utils/StringUtils";
 import { useData } from "@/services/fetchApi";
@@ -43,28 +43,38 @@ const paths = [
 const id = route.params.id as string;
 
 const levels = await useData("/levels/levels.json");
-const mixin = computed(() => levels[id].mixin);
-const imageSrc = computed(() => {
-  return levels[id].image;
+const levelTitle = ref<string>("");
+const imageSrc = ref<string>("");
+const mixin = ref<string>("");
+const actualAnswer = ref<string>("");
+
+const rowLength = ref<number>(9);
+const userAnswer = ref<string>("");
+
+const initialized = ref<boolean>(false);
+
+
+onMounted(() => {
+  levelTitle.value = levels.title;
+  imageSrc.value = levels[id].image;
+  mixin.value = levels[id].mixin;
+  actualAnswer.value = levels[id].actual_answer;
+
+  userAnswer.value = actualAnswer.value.replaceAll(/\w/g, "_").replaceAll(/\s/g, "");
+  
+  initialized.value = true;
 });
-const levelTitle = computed(() => levels.title);
 
 const actualAnswerLetters = computed(() => {
   return actualAnswer.value.replaceAll(" ", "");
 });
 
-const actualAnswer = computed(() => levels[id].actual_answer);
-
 const actualAnswerWords = computed(() => {
   return actualAnswer.value.split(" ");
 });
 
-const rowLength = ref<number>(9);
-
-const userAnswer = ref("");
-
 const onRemoveLetter = (index: number) => {
-  userAnswer.value = removeCharacterAtIndex(userAnswer.value, index);
+  userAnswer.value = replaceCharAtIndex(userAnswer.value, index, "_");
 };
 
 const mixedLetters = computed(() => {
@@ -74,12 +84,10 @@ const mixedLetters = computed(() => {
 });
 
 const onAddLetter = (index: number) => {
-  if (userAnswer.value.length < actualAnswerLetters.value.length) {
-    userAnswer.value = insertCharacterAtIndex(
-      userAnswer.value,
-      userAnswer.value.length,
-      mixedLetters.value[index]
-    );
+  const cursor = userAnswer.value.indexOf("_");
+
+  if (cursor > -1 && userAnswer.value[cursor] === "_") {
+    userAnswer.value = replaceCharAtIndex(userAnswer.value, cursor, mixedLetters.value[index]);
   }
 };
 
@@ -87,7 +95,7 @@ const letter = (index: number) => {
   return index < userAnswer.value.length ? userAnswer.value.at(index) : "";
 };
 
-const index = (i: number, j: any) => {
+const index = (i: number, j: number) => {
   return (
     actualAnswerWords.value
       .filter((_: any, idx: number) => idx < i)
@@ -96,7 +104,7 @@ const index = (i: number, j: any) => {
 };
 
 const isLevelFinished = computed(() => {
-  return actualAnswerLetters.value === userAnswer.value;
+  return initialized.value && actualAnswerLetters.value === userAnswer.value;
 });
 
 watch(isLevelFinished, () => {
@@ -154,6 +162,7 @@ watch(isLevelFinished, () => {
             v-for="(_, j) in word"
             :key="`${i},${j}`"
             @click="onRemoveLetter(index(i, j))"
+            :class="{ 'letter-inplace': letter(index(i, j)) !== '_' }"
             class="letter-placeholder"
           >
             {{ letter(index(i, j)) }}
@@ -252,10 +261,15 @@ watch(isLevelFinished, () => {
   justify-content: center;
   align-items: center;
   user-select: none;
-  border-bottom: 3px solid var(--ion-color-primary);
+  border-bottom: 3px solid var(--ion-color-step-250);
   font-weight: 600;
-  font-size: 1rem;
   text-transform: uppercase;
+  font-size: 0;
+}
+
+.letter-inplace {
+  border-bottom: 3px solid var(--ion-color-primary);
+  font-size: 1rem;
 }
 
 .letter-picker {
