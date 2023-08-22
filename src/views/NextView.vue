@@ -1,8 +1,15 @@
 <script setup lang="ts">
 import { useData } from "@/services/fetchApi";
-import { IonPage, IonContent, IonButton } from "@ionic/vue";
+import {
+  IonPage,
+  IonContent,
+  IonButton,
+  IonGrid,
+  IonRow,
+  IonCol,
+} from "@ionic/vue";
 import { computed } from "vue";
-import { useIonRouter } from '@ionic/vue';
+import { useIonRouter } from "@ionic/vue";
 import { useStore } from "vuex";
 const store = useStore();
 const ionRouter = useIonRouter();
@@ -22,23 +29,42 @@ async function onContinue() {
 
 <template>
   <ion-page>
-    <ion-content>
-      <div class="level-title">
-        <p class="level-title__text">Отлично!</p>
-      </div>
-      <img class="level-image" alt="level-image" :src="imageSrc" />
+    <ion-content :scroll-y="false">
+      <ion-grid class="ion-no-padding" style="height: 100%" fixed>
+        <ion-row class="ion-justify-content-center" style="height: 100%">
+          <ion-col
+            size="12"
+            sizeMd="8"
+            sizeLg="6"
+            sizeXl="4"
+            style="height: 100%"
+          >
+            <div class="level-title">
+              <p class="level-title__text">Отлично!</p>
+            </div>
+            <img class="level-image" alt="level-image" :src="imageSrc" />
 
-      <div class="level-answer">
-        {{ actualAnswer }}
-      </div>
+            <div class="level-answer">
+              {{ actualAnswer }}
+            </div>
 
-      <div class="buttons">
-        <ion-button class="boring-button" color="warning">Скучно</ion-button>
-        <ion-button class="fun-button" color="warning">Отлично</ion-button>
-        <ion-button class="continue-button" color="warning" @click="onContinue"
-          >Продолжить</ion-button
-        >
-      </div>
+            <div class="buttons">
+              <ion-button class="boring-button" color="warning"
+                >Скучно</ion-button
+              >
+              <ion-button class="fun-button" color="warning"
+                >Отлично</ion-button
+              >
+              <ion-button
+                class="continue-button"
+                color="warning"
+                @click="onContinue"
+                >Продолжить
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
   </ion-page>
 </template>

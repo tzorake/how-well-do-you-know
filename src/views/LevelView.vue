@@ -13,6 +13,9 @@ import {
   IonIcon,
   IonItem,
   IonFooter,
+  IonGrid,
+  IonRow,
+  IonCol,
 } from "@ionic/vue";
 import {
   diamondOutline,
@@ -95,7 +98,7 @@ watch(isLevelFinished, (newValue) => {
           <ion-button routerLink="/levels">Уровень: 1</ion-button>
           <ion-button routerLink="/diamond"
             >600
-            <ion-icon slot="end" :icon="diamondOutline"></ion-icon>
+            <ion-icon slot="end" :icon="diamondOutline" />
           </ion-button>
         </ion-buttons>
         <ion-title></ion-title>
@@ -104,44 +107,78 @@ watch(isLevelFinished, (newValue) => {
 
     <!-- CONTENT -->
     <ion-content id="main-content" class="ion-no-padding" :scroll-y="false">
-      <div class="level-title">
-        <p class="level-title__text">
-          {{ levelTitle }}
-        </p>
-      </div>
-      <img class="level-image" alt="level-image" :src="imageSrc" />
+      <ion-grid class="ion-no-padding" style="height: 100%" fixed>
+        <ion-row class="ion-justify-content-center" style="height: 100%">
+          <ion-col
+            size="12"
+            sizeMd="8"
+            sizeLg="6"
+            sizeXl="4"
+            style="height: 100%"
+          >
+            <div class="level-title">
+              <p class="level-title__text">
+                {{ levelTitle }}
+              </p>
+            </div>
+            <img class="level-image" alt="level-image" :src="imageSrc" />
 
-      <UserInputs
-        v-model="userAnswer"
-        :actual-answer="actualAnswer"
-        :mixin="mixin"
-      ></UserInputs>
+            <UserInputs
+              v-model="userAnswer"
+              :actual-answer="actualAnswer"
+              :mixin="mixin"
+            ></UserInputs>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
 
     <!-- FOOTER -->
     <ion-footer>
-      <div class="footer">
-        <ion-button shape="round" fill="outline" color="tertiary">
-          <ion-icon size="large" slot="start" :icon="eyeOutline"></ion-icon>
-          <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
-        </ion-button>
-        <ion-button shape="round" fill="outline" color="tertiary">
-          <ion-icon
-            size="large"
-            slot="start"
-            :icon="trashBinOutline"
-          ></ion-icon>
-          <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon
-        ></ion-button>
-        <ion-button shape="round" fill="outline" color="tertiary">
-          <ion-icon
-            size="large"
-            slot="start"
-            :icon="playForwardOutline"
-          ></ion-icon>
-          <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
-        </ion-button>
-      </div>
+      <ion-grid fixed>
+        <ion-row class="ion-justify-content-center">
+          <ion-col size="12" sizeMd="8" sizeLg="6" sizeXl="4">
+            <div class="footer">
+              <ion-button shape="round" fill="outline" color="tertiary">
+                <ion-icon
+                  size="large"
+                  slot="start"
+                  :icon="eyeOutline"
+                ></ion-icon>
+                <ion-icon
+                  size="large"
+                  slot="end"
+                  :icon="desktopOutline"
+                ></ion-icon>
+              </ion-button>
+              <ion-button shape="round" fill="outline" color="tertiary">
+                <ion-icon
+                  size="large"
+                  slot="start"
+                  :icon="trashBinOutline"
+                ></ion-icon>
+                <ion-icon
+                  size="large"
+                  slot="end"
+                  :icon="desktopOutline"
+                ></ion-icon
+              ></ion-button>
+              <ion-button shape="round" fill="outline" color="tertiary">
+                <ion-icon
+                  size="large"
+                  slot="start"
+                  :icon="playForwardOutline"
+                ></ion-icon>
+                <ion-icon
+                  size="large"
+                  slot="end"
+                  :icon="desktopOutline"
+                ></ion-icon>
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-footer>
   </ion-page>
 </template>
@@ -170,9 +207,7 @@ watch(isLevelFinished, (newValue) => {
 
 .footer {
   display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  height: 56px;
+  justify-content: space-between;
 }
 
 ion-button {
