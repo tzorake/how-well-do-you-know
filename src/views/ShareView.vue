@@ -3,7 +3,7 @@ import BackLayout from "@/layouts/BackLayout.vue";
 </script>
 
 <template>
-  <back-layout title="Поделиться"> Share </back-layout>
+  <back-layout title="Поделиться"></back-layout>
 </template>
 
 <style scoped></style>

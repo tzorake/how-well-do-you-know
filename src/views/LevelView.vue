@@ -30,10 +30,9 @@ import { useStore } from "vuex";
 const store = useStore();
 const ionRouter = useIonRouter();
 const paths = [
-  { name: "Алмазы", url: "/diamond" },
-  { name: "Поделиться", url: "/share" },
   { name: "Об игре", url: "/about" },
-  { name: "Контакты", url: "/contact" },
+  { name: "Поделиться", url: "/share" },
+  { name: "Алмазы", url: "/diamond" },
 ];
 
 const levels = await useData("/levels/levels.json");

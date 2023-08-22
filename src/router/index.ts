@@ -5,7 +5,6 @@ const routes: Array<RouteRecordRaw> = [
   { path: "/", component: () => import("@/views/LevelView.vue") },
   { path: "/next-level", component: () => import("@/views/NextView.vue") },
   { path: "/about", component: () => import("@/views/AboutView.vue") },
-  { path: "/contact", component: () => import("@/views/ContactView.vue") },
   { path: "/share", component: () => import("@/views/ShareView.vue") },
   { path: "/diamond", component: () => import("@/views/DiamondView.vue") },
   { path: "/levels", component: () => import("@/views/LevelListView.vue") },
