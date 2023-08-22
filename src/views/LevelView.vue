@@ -14,7 +14,6 @@ import {
   IonItem,
   IonFooter,
 } from "@ionic/vue";
-import AppLetter from "@/components/LevelView/AppLetter.vue";
 import {
   diamondOutline,
   playForwardOutline,
@@ -24,12 +23,9 @@ import {
 } from "ionicons/icons";
 import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import {
-  insertCharacterAtIndex,
-  replaceCharAtIndex,
-  shuffle,
-} from "@/utils/StringUtils";
 import { useData } from "@/services/fetchApi";
+import UserInputs from "@/components/LevelView/UserInputs.vue";
+import { Letter } from "@/utils/Letter";
 
 const router = useRouter();
 const route = useRoute();
@@ -48,11 +44,9 @@ const imageSrc = ref<string>("");
 const mixin = ref<string>("");
 const actualAnswer = ref<string>("");
 
-const rowLength = ref<number>(9);
-const userAnswer = ref<string>("");
+const userAnswer = ref<Letter[]>([]);
 
 const initialized = ref<boolean>(false);
-
 
 onMounted(() => {
   levelTitle.value = levels.title;
@@ -60,8 +54,8 @@ onMounted(() => {
   mixin.value = levels[id].mixin;
   actualAnswer.value = levels[id].actual_answer;
 
-  userAnswer.value = actualAnswer.value.replaceAll(/\w/g, "_").replaceAll(/\s/g, "");
-  
+  userAnswer.value = Letter.toLetters(actualAnswer.value.replaceAll(/\w/g, "_").replaceAll(/\s/g, ""));
+
   initialized.value = true;
 });
 
@@ -69,43 +63,15 @@ const actualAnswerLetters = computed(() => {
   return actualAnswer.value.replaceAll(" ", "");
 });
 
-const actualAnswerWords = computed(() => {
-  return actualAnswer.value.split(" ");
-});
-
-const onRemoveLetter = (index: number) => {
-  userAnswer.value = replaceCharAtIndex(userAnswer.value, index, "_");
-};
-
-const mixedLetters = computed(() => {
-  const word = actualAnswerLetters.value + mixin.value;
-
-  return shuffle(word);
-});
-
-const onAddLetter = (index: number) => {
-  const cursor = userAnswer.value.indexOf("_");
-
-  if (cursor > -1 && userAnswer.value[cursor] === "_") {
-    userAnswer.value = replaceCharAtIndex(userAnswer.value, cursor, mixedLetters.value[index]);
-  }
-};
-
-const letter = (index: number) => {
-  return index < userAnswer.value.length ? userAnswer.value.at(index) : "";
-};
-
-const index = (i: number, j: number) => {
-  return (
-    actualAnswerWords.value
-      .filter((_: any, idx: number) => idx < i)
-      .reduce((prev: any, curr: string | any[]) => prev + curr.length, 0) + j
-  );
-};
-
 const isLevelFinished = computed(() => {
-  return initialized.value && actualAnswerLetters.value === userAnswer.value;
+  return initialized.value 
+  && actualAnswerLetters.value.length === userAnswer.value.length
+  && actualAnswerLetters.value === Letter.toString(userAnswer.value)
 });
+
+function onUserAnswerChanged(newValue: Letter[]) {
+  userAnswer.value = newValue;
+}
 
 watch(isLevelFinished, () => {
   router.push({ path: "/next-level/" + id });
@@ -155,47 +121,12 @@ watch(isLevelFinished, () => {
       </div>
       <img class="level-image" alt="level-image" :src="imageSrc" />
 
-      <!-- USER-ANSWER -->
-      <div class="user-answer">
-        <template v-for="(word, i) in actualAnswerWords" :key="i">
-          <div
-            v-for="(_, j) in word"
-            :key="`${i},${j}`"
-            @click="onRemoveLetter(index(i, j))"
-            :class="{ 'letter-inplace': letter(index(i, j)) !== '_' }"
-            class="letter-placeholder"
-          >
-            {{ letter(index(i, j)) }}
-          </div>
-
-          <div
-            class="letter-placeholder transparent"
-            v-if="i !== actualAnswerWords.length - 1"
-          ></div>
-        </template>
-      </div>
-
-      <!-- LETTER-PICKER -->
-      <div class="letter-picker">
-        <div
-          class="row"
-          v-for="rowIndex in Math.ceil(mixedLetters.length / rowLength)"
-          :key="rowIndex"
-        >
-          <AppLetter
-            v-for="(letter, i) in mixedLetters.slice(
-              (rowIndex - 1) * rowLength,
-              rowIndex * rowLength
-            )"
-            :key="i"
-            :style="{
-              width: `calc((100% - ${rowLength - 1}*0.5rem) / ${rowLength})`,
-            }"
-            @click="onAddLetter((rowIndex - 1) * rowLength + i)"
-            >{{ letter }}
-          </AppLetter>
-        </div>
-      </div>
+      <UserInputs
+        :actual-answer="actualAnswer"
+        :user-answer="userAnswer"
+        :mixin="mixin"
+        @change:user-answer="onUserAnswerChanged"
+      ></UserInputs>
     </ion-content>
 
     <!-- FOOTER -->
@@ -245,53 +176,6 @@ watch(isLevelFinished, () => {
   height: 50%;
   width: 100%;
   object-fit: cover;
-}
-.user-answer {
-  height: 10%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.letter-placeholder {
-  width: 2rem;
-  height: 2rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  border-bottom: 3px solid var(--ion-color-step-250);
-  font-weight: 600;
-  text-transform: uppercase;
-  font-size: 0;
-}
-
-.letter-inplace {
-  border-bottom: 3px solid var(--ion-color-primary);
-  font-size: 1rem;
-}
-
-.letter-picker {
-  height: 30%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.row {
-  width: calc(100% - 2 * 0.5rem);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 0.5rem;
-  margin: 0 0.5rem;
-}
-
-.transparent {
-  opacity: 0;
 }
 
 .footer {
