@@ -1,58 +1,43 @@
 <script setup lang="ts">
 import { useData } from "@/services/fetchApi";
-import {
-  IonPage,
-  IonContent,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonList,
-  IonItem,
-  IonButton,
-  IonButtons,
-  IonLabel,
-} from "@ionic/vue";
+import { IonPage, IonContent, IonButton } from "@ionic/vue";
 import { computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useIonRouter } from '@ionic/vue';
+import { useStore } from "vuex";
+const store = useStore();
+const ionRouter = useIonRouter();
 
-const router = useRouter();
-const route = useRoute();
-const id = route.params.id as string;
+const currentLevelId = computed(() => store.state.currentLevelId);
 const levels = await useData("/levels/levels.json");
 const imageSrc = computed(() => {
-  return levels[id].image;
+  return levels[currentLevelId.value].image;
 });
-const actualAnswer = computed(() => levels[id].actual_answer);
+const actualAnswer = computed(() => levels[currentLevelId.value].actual_answer);
 
-function onContinue() {
-  const nextId = parseInt(id) + 1;
-
-  if (nextId in levels) {
-    router.push({ path: "/level-view/" + nextId });
-  }
+async function onContinue() {
+  ionRouter.navigate("/level-view/", "back", "pop");
+  store.dispatch("setCurrentLevelId", currentLevelId.value + 1);
 }
-
 </script>
 
 <template>
   <ion-page>
     <ion-content>
-
       <div class="level-title">
-        <p class="level-title__text">
-          Well Done!
-        </p>
+        <p class="level-title__text">Отлично!</p>
       </div>
-      <img class="level-image" alt="level-image" :src="imageSrc"/>
+      <img class="level-image" alt="level-image" :src="imageSrc" />
 
       <div class="level-answer">
         {{ actualAnswer }}
       </div>
 
       <div class="buttons">
-        <ion-button class="boring-button" color="warning">Boring</ion-button>
-        <ion-button class="fun-button" color="warning">Fun</ion-button>
-        <ion-button class="continue-button" color="warning" @click="onContinue">Continue</ion-button>
+        <ion-button class="boring-button" color="warning">Скучно</ion-button>
+        <ion-button class="fun-button" color="warning">Отлично</ion-button>
+        <ion-button class="continue-button" color="warning" @click="onContinue"
+          >Продолжить</ion-button
+        >
       </div>
     </ion-content>
   </ion-page>
@@ -65,7 +50,7 @@ function onContinue() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 2.0rem;
+  font-size: 2rem;
 }
 
 .level-image {
@@ -90,7 +75,7 @@ function onContinue() {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
-  grid-template-areas: 
+  grid-template-areas:
     "boring-button fun-button"
     "continue-button continue-button";
   padding: 1rem;
@@ -108,5 +93,4 @@ function onContinue() {
 .continue-button {
   grid-area: continue-button;
 }
-
 </style>

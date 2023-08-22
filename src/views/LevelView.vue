@@ -21,14 +21,14 @@ import {
   trashBinOutline,
   eyeOutline,
 } from "ionicons/icons";
-import { computed, onMounted, ref, watch } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { computed, ref, watch } from "vue";
+import { useIonRouter } from "@ionic/vue";
 import { useData } from "@/services/fetchApi";
 import UserInputs from "@/components/LevelView/UserInputs.vue";
 import { Letter } from "@/utils/Letter";
-
-const router = useRouter();
-const route = useRoute();
+import { useStore } from "vuex";
+const store = useStore();
+const ionRouter = useIonRouter();
 const paths = [
   { name: "Алмазы", url: "/diamond" },
   { name: "Поделиться", url: "/share" },
@@ -36,45 +36,36 @@ const paths = [
   { name: "Контакты", url: "/contact" },
 ];
 
-const id = route.params.id as string;
-
 const levels = await useData("/levels/levels.json");
-const levelTitle = ref<string>("");
-const imageSrc = ref<string>("");
-const mixin = ref<string>("");
-const actualAnswer = ref<string>("");
-
-const userAnswer = ref<Letter[]>([]);
-
-const initialized = ref<boolean>(false);
-
-onMounted(() => {
-  levelTitle.value = levels.title;
-  imageSrc.value = levels[id].image;
-  mixin.value = levels[id].mixin;
-  actualAnswer.value = levels[id].actual_answer;
-
-  userAnswer.value = Letter.toLetters(actualAnswer.value.replaceAll(/\w/g, "_").replaceAll(/\s/g, ""));
-
-  initialized.value = true;
-});
-
+const currentLevelId = computed(() => store.state.currentLevelId);
+const levelTitle = computed(() => levels.title);
+const imageSrc = computed(() => levels[currentLevelId.value].image);
+const mixin = computed(() => levels[currentLevelId.value].mixin);
+const actualAnswer = computed(() => levels[currentLevelId.value].actual_answer);
 const actualAnswerLetters = computed(() => {
   return actualAnswer.value.replaceAll(" ", "");
 });
 
-const isLevelFinished = computed(() => {
-  return initialized.value 
-  && actualAnswerLetters.value.length === userAnswer.value.length
-  && actualAnswerLetters.value === Letter.toString(userAnswer.value)
-});
+const userAnswer = ref<Letter[]>([]);
 
-function onUserAnswerChanged(newValue: Letter[]) {
-  userAnswer.value = newValue;
-}
+watch(
+  currentLevelId,
+  () => {
+    userAnswer.value = Letter.toLetters(
+      actualAnswer.value.replaceAll(/\w/g, "_").replaceAll(/\s/g, "")
+    );
+  },
+  { immediate: true }
+);
 
-watch(isLevelFinished, () => {
-  router.push({ path: "/next-level/" + id });
+const isLevelFinished = computed(
+  () => actualAnswerLetters.value === Letter.toString(userAnswer.value)
+);
+
+watch(isLevelFinished, (newValue) => {
+  if (newValue) {
+    ionRouter.navigate("/next-level/", "forward", "push");
+  }
 });
 </script>
 
@@ -102,8 +93,8 @@ watch(isLevelFinished, () => {
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button>Уровень: 1</ion-button>
-          <ion-button
+          <ion-button routerLink="/levels">Уровень: 1</ion-button>
+          <ion-button routerLink="/diamond"
             >600
             <ion-icon slot="end" :icon="diamondOutline"></ion-icon>
           </ion-button>
@@ -122,10 +113,9 @@ watch(isLevelFinished, () => {
       <img class="level-image" alt="level-image" :src="imageSrc" />
 
       <UserInputs
+        v-model="userAnswer"
         :actual-answer="actualAnswer"
-        :user-answer="userAnswer"
         :mixin="mixin"
-        @change:user-answer="onUserAnswerChanged"
       ></UserInputs>
     </ion-content>
 
@@ -169,6 +159,7 @@ watch(isLevelFinished, () => {
 
 .level-title__text {
   display: inline-block;
+  font-size: 1.25rem;
   margin: 0;
 }
 

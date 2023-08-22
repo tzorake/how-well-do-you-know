@@ -22,7 +22,7 @@ defineProps({
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
-          <ion-back-button></ion-back-button>
+          <ion-back-button defaultHref="/"></ion-back-button>
         </ion-buttons>
         <IonTitle>{{ title }}</IonTitle>
       </ion-toolbar>

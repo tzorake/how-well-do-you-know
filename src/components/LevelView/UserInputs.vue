@@ -1,26 +1,24 @@
 <script setup lang="ts">
-import { replaceCharAtIndex, shuffle } from '@/utils/StringUtils';
-import { computed, ref, watch } from 'vue';
+import { shuffle } from "@/utils/StringUtils";
+import { computed, ref, watch } from "vue";
 import AppLetter from "@/components/LevelView/AppLetter.vue";
-import { Letter } from '@/utils/Letter';
+import { Letter } from "@/utils/Letter";
 
 const props = defineProps({
-  actualAnswer: {
-    type: String,
+  modelValue: {
+    type: Array<Letter>,
     required: true,
   },
-  userAnswer: {
-    type: Array<Letter>,
+  actualAnswer: {
+    type: String,
     required: true,
   },
   mixin: {
     type: String,
     required: true,
-  }
+  },
 });
-const emit = defineEmits([
-  "change:userAnswer",
-]);
+const emit = defineEmits(["update:modelValue"]);
 
 const rowLength = ref<number>(9);
 
@@ -30,41 +28,50 @@ const actualAnswerWords = computed(() => {
 
 const mixedLetters = computed(() => {
   const word = props.actualAnswer.replaceAll(" ", "") + props.mixin;
-
   return shuffle(word);
 });
 const letterStates = ref<boolean[]>([]);
 
-watch(() => mixedLetters, () => {
-  letterStates.value = new Array(mixedLetters.value.length).fill(false);
-}, { immediate: true });
+watch(
+  mixedLetters,
+  () => {
+    letterStates.value = new Array(mixedLetters.value.length).fill(false);
+  },
+  { immediate: true }
+);
 
 const onRemoveLetter = (index: number) => {
-  const stateIndex = props.userAnswer[index].index;
+  const stateIndex = props.modelValue[index].index;
   letterStates.value[stateIndex] = false;
 
-  props.userAnswer[index] = new Letter("_", index);
+  props.modelValue[index] = new Letter("_", index);
 
-  emit("change:userAnswer", props.userAnswer.map(l => l.copy()));
+  emit(
+    "update:modelValue",
+    props.modelValue.map((l) => l.copy())
+  );
 };
 
 const onAddLetter = (index: number) => {
-  if(letterStates.value[index]) {
+  if (letterStates.value[index]) {
     return;
   }
 
-  const cursor = props.userAnswer.findIndex(l => l.letter === "_");
+  const cursor = props.modelValue.findIndex((l) => l.letter === "_");
 
-  if (cursor > -1 && props.userAnswer.at(cursor)?.letter === "_") {
-    props.userAnswer[cursor] = new Letter(mixedLetters.value[index], index);
+  if (cursor > -1 && props.modelValue.at(cursor)?.letter === "_") {
+    props.modelValue[cursor] = new Letter(mixedLetters.value[index], index);
 
     letterStates.value[index] = true;
-    emit("change:userAnswer", props.userAnswer.map(l => l.copy()));
+    emit(
+      "update:modelValue",
+      props.modelValue.map((l) => l.copy())
+    );
   }
 };
 
 const letter = (index: number) => {
-  return props.userAnswer.at(index);
+  return props.modelValue.at(index);
 };
 
 const index = (i: number, j: number) => {
@@ -74,8 +81,6 @@ const index = (i: number, j: number) => {
       .reduce((prev: number, curr: string) => prev + curr.length, 0) + j
   );
 };
-
-
 </script>
 
 <template>
@@ -115,7 +120,7 @@ const index = (i: number, j: number) => {
         :style="{
           width: `calc((100% - ${rowLength - 1}*0.5rem) / ${rowLength})`,
         }"
-        :class="{ 'transparent': letterStates[(rowIndex - 1) * rowLength + i] }"
+        :class="{ transparent: letterStates[(rowIndex - 1) * rowLength + i] }"
         @click="onAddLetter((rowIndex - 1) * rowLength + i)"
         >{{ letter }}
       </AppLetter>
@@ -124,7 +129,6 @@ const index = (i: number, j: number) => {
 </template>
 
 <style scoped>
-
 .user-answer {
   height: 10%;
   display: flex;
@@ -172,5 +176,4 @@ const index = (i: number, j: number) => {
 .transparent {
   opacity: 0;
 }
-
 </style>
