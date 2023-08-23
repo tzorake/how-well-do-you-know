@@ -7,34 +7,45 @@ import {
   IonGrid,
   IonRow,
   IonCol,
+  IonIcon,
+  IonLabel,
 } from "@ionic/vue";
 import { computed } from "vue";
-import { useIonRouter } from "@ionic/vue";
+import { diamondOutline, happyOutline, sadOutline } from "ionicons/icons";
+
 import { useStore } from "vuex";
 const store = useStore();
+
+import { useIonRouter } from "@ionic/vue";
 const ionRouter = useIonRouter();
 
 const currentLevelIndex = computed(() => store.state.currentLevelIndex);
-const lastAvailableLevelIndex = computed(() => store.state.lastAvailableLevelIndex);
+const lastAvailableLevelIndex = computed(
+  () => store.state.lastAvailableLevelIndex
+);
 const data = await useData("/levels/levels.json");
 const levels = data.levels;
 const imageSrc = computed(() => {
   return levels[currentLevelIndex.value].image;
 });
-const actualAnswer = computed(() => levels[currentLevelIndex.value].actual_answer);
+const actualAnswer = computed(
+  () => levels[currentLevelIndex.value].actual_answer
+);
 
 async function onContinue() {
-  ionRouter.navigate("/level-view/", "back", "pop");
-
-  if (currentLevelIndex.value >= levels.length) {
+  if (currentLevelIndex.value >= levels.length - 1) {
     return;
   }
 
-  if (currentLevelIndex.value + 1 > lastAvailableLevelIndex.value) {
-    store.dispatch("setLastAvailableLevelIndex", lastAvailableLevelIndex.value + 1);
+  const newLevelIndex = currentLevelIndex.value + 1;
+
+  if (currentLevelIndex.value === lastAvailableLevelIndex.value) {
+    await store.dispatch("setLastAvailableLevelIndex", newLevelIndex);
   }
 
-  store.dispatch("setCurrentLevelIndex", currentLevelIndex.value + 1);
+  await store.dispatch("setCurrentLevelIndex", newLevelIndex);
+
+  ionRouter.navigate("/level-view/", "back", "pop");
 }
 </script>
 
@@ -57,19 +68,28 @@ async function onContinue() {
 
             <div class="level-answer">
               {{ actualAnswer }}
+              <ion-label class="reward">
+                <span>+100</span>
+                <ion-icon slot="end" :icon="diamondOutline" />
+              </ion-label>
             </div>
 
             <div class="buttons">
-              <ion-button class="boring-button" color="warning"
-                >Скучно</ion-button
-              >
-              <ion-button class="fun-button" color="warning"
-                >Отлично</ion-button
-              >
               <ion-button
-                class="continue-button"
-                color="warning"
                 @click="onContinue"
+                class="boring-button"
+                color="danger"
+                >Скучно
+                <ion-icon slot="end" :icon="sadOutline" />
+              </ion-button>
+              <ion-button @click="onContinue" class="fun-button" color="success"
+                >Отлично
+                <ion-icon slot="end" :icon="happyOutline" />
+              </ion-button>
+              <ion-button
+                @click="onContinue"
+                class="continue-button"
+                color="secondary"
                 >Продолжить
               </ion-button>
             </div>
@@ -98,6 +118,7 @@ async function onContinue() {
 
 .level-answer {
   height: 15%;
+  gap: 0.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -117,6 +138,13 @@ async function onContinue() {
     "continue-button continue-button";
   padding: 1rem;
   gap: 0.5rem;
+}
+
+.reward {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
 }
 
 .boring-button {
