@@ -11,11 +11,13 @@ import { IonApp, IonRouterOutlet } from "@ionic/vue";
 import { useStore } from "vuex";
 import { onBeforeMount, ref } from "vue";
 const store = useStore();
-const fetchCurrentLevelId = () => store.dispatch("fetchCurrentLevelId");
+const fetchCurrentLevelIndex = () => store.dispatch("fetchCurrentLevelIndex");
+const fetchLastAvailableLevelIndex = () => store.dispatch("fetchLastAvailableLevelIndex");
 
 const initialized = ref(false);
 onBeforeMount(async () => {
-  await fetchCurrentLevelId();
+  await fetchCurrentLevelIndex();
+  await fetchLastAvailableLevelIndex();
   initialized.value = true;
 });
 </script>

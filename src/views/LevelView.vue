@@ -38,12 +38,13 @@ const paths = [
   { name: "Алмазы", url: "/diamond" },
 ];
 
-const levels = await useData("/levels/levels.json");
-const currentLevelId = computed(() => store.state.currentLevelId);
+const data = await useData("/levels/levels.json");
+const levels = data.levels;
+const currentLevelIndex = computed(() => store.state.currentLevelIndex);
 const levelTitle = computed(() => levels.title);
-const imageSrc = computed(() => levels[currentLevelId.value].image);
-const mixin = computed(() => levels[currentLevelId.value].mixin);
-const actualAnswer = computed(() => levels[currentLevelId.value].actual_answer);
+const imageSrc = computed(() => levels[currentLevelIndex.value].image);
+const mixin = computed(() => levels[currentLevelIndex.value].mixin);
+const actualAnswer = computed(() => levels[currentLevelIndex.value].actual_answer);
 const actualAnswerLetters = computed(() => {
   return actualAnswer.value.replaceAll(" ", "");
 });
@@ -51,7 +52,7 @@ const actualAnswerLetters = computed(() => {
 const userAnswer = ref<Letter[]>([]);
 
 watch(
-  currentLevelId,
+  currentLevelIndex,
   () => {
     userAnswer.value = Letter.toLetters(
       actualAnswer.value.replaceAll(/\w/g, "_").replaceAll(/\s/g, "")
@@ -95,7 +96,7 @@ watch(isLevelFinished, (newValue) => {
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button routerLink="/levels">Уровень: 1</ion-button>
+          <ion-button routerLink="/levels">Уровень: {{ currentLevelIndex + 1 }}</ion-button>
           <ion-button routerLink="/diamond"
             >600
             <ion-icon slot="end" :icon="diamondOutline" />

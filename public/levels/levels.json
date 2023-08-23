@@ -1,13 +1,15 @@
 {
   "title": "Что за фильм?",
-  "1": {
-    "actual_answer": "foo bar",
-    "mixin": "qwejmssmzfma",
-    "image": "/levels/img/1.png"
-  },
-  "2": {
-    "actual_answer": "bar foo",
-    "mixin": "jkfbzxndfjaj",
-    "image": "/levels/img/2.png"
-  }
+  "levels": [
+    {
+      "actual_answer": "foo bar",
+      "mixin": "qwejmssmzfma",
+      "image": "/levels/img/1.png"
+    },
+    {
+      "actual_answer": "bar foo",
+      "mixin": "jkfbzxndfjaj",
+      "image": "/levels/img/2.png"
+    }
+  ]
 }

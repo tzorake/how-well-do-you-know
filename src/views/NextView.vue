@@ -14,16 +14,27 @@ import { useStore } from "vuex";
 const store = useStore();
 const ionRouter = useIonRouter();
 
-const currentLevelId = computed(() => store.state.currentLevelId);
-const levels = await useData("/levels/levels.json");
+const currentLevelIndex = computed(() => store.state.currentLevelIndex);
+const lastAvailableLevelIndex = computed(() => store.state.lastAvailableLevelIndex);
+const data = await useData("/levels/levels.json");
+const levels = data.levels;
 const imageSrc = computed(() => {
-  return levels[currentLevelId.value].image;
+  return levels[currentLevelIndex.value].image;
 });
-const actualAnswer = computed(() => levels[currentLevelId.value].actual_answer);
+const actualAnswer = computed(() => levels[currentLevelIndex.value].actual_answer);
 
 async function onContinue() {
   ionRouter.navigate("/level-view/", "back", "pop");
-  store.dispatch("setCurrentLevelId", currentLevelId.value + 1);
+
+  if (currentLevelIndex.value >= levels.length) {
+    return;
+  }
+
+  if (currentLevelIndex.value + 1 > lastAvailableLevelIndex.value) {
+    store.dispatch("setLastAvailableLevelIndex", lastAvailableLevelIndex.value + 1);
+  }
+
+  store.dispatch("setCurrentLevelIndex", currentLevelIndex.value + 1);
 }
 </script>
 
