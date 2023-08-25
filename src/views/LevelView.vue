@@ -25,12 +25,14 @@ import {
   eyeOutline,
 } from "ionicons/icons";
 import { computed, ref, watch } from "vue";
-import { useIonRouter } from "@ionic/vue";
 import { useData } from "@/services/fetchApi";
-import UserInputs from "@/components/LevelView/UserInputs.vue";
 import { Letter } from "@/utils/Letter";
+import UserInputs from "@/components/LevelView/UserInputs.vue";
+
 import { useStore } from "vuex";
 const store = useStore();
+
+import { useIonRouter } from "@ionic/vue";
 const ionRouter = useIonRouter();
 const paths = [
   { name: "Об игре", url: "/about" },
@@ -40,11 +42,14 @@ const paths = [
 
 const data = await useData("/levels/levels.json");
 const levels = data.levels;
+const diamonds = computed(() => store.state.diamonds);
 const currentLevelIndex = computed(() => store.state.currentLevelIndex);
-const levelTitle = computed(() => levels.title);
+const levelTitle = computed(() => data.title);
 const imageSrc = computed(() => levels[currentLevelIndex.value].image);
 const mixin = computed(() => levels[currentLevelIndex.value].mixin);
-const actualAnswer = computed(() => levels[currentLevelIndex.value].actual_answer);
+const actualAnswer = computed(
+  () => levels[currentLevelIndex.value].actual_answer
+);
 const actualAnswerLetters = computed(() => {
   return actualAnswer.value.replaceAll(" ", "");
 });
@@ -96,9 +101,11 @@ watch(isLevelFinished, (newValue) => {
           <ion-menu-button></ion-menu-button>
         </ion-buttons>
         <ion-buttons slot="end">
-          <ion-button routerLink="/levels">Уровень: {{ currentLevelIndex + 1 }}</ion-button>
+          <ion-button routerLink="/levels"
+            >Уровень: {{ currentLevelIndex + 1 }}</ion-button
+          >
           <ion-button routerLink="/diamond"
-            >600
+            >{{ diamonds }}
             <ion-icon slot="end" :icon="diamondOutline" />
           </ion-button>
         </ion-buttons>
