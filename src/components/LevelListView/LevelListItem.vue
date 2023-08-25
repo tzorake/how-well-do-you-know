@@ -24,7 +24,7 @@ const props = defineProps({
       <div class="image-placeholder" v-else></div>
     </div>
     <div class="text">
-      <span class="level-id">
+      <span class="level-id" :class="{ 'lock-text-color': props.state === LevelListItemState.LOCKED }">
         <slot></slot>
       </span>
       <span class="play-text" v-if="props.state === LevelListItemState.CURRENT">Play</span>
@@ -45,17 +45,20 @@ const props = defineProps({
 <style scoped>
 .level-icon {
   position: relative;
-  display: flex;
   user-select: none;
 }
 
 .text {
   position: absolute;
-  font-size: 2.25rem;
+  font-size: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
 }
 
 .mark {
@@ -97,5 +100,9 @@ const props = defineProps({
 
 .image-placeholder {
   background-color: var(--ion-color-dark-cyan);
+}
+
+.lock-text-color {
+  color: var(--ion-color-primary);
 }
 </style>
