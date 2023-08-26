@@ -24,7 +24,7 @@ onBeforeMount(async () => {
   await fetchDiamonds();
   await StatusBar.setBackgroundColor({
     color: "#148485",
-  });
+  }).catch(() => {});
   initialized.value = true;
 });
 </script>
