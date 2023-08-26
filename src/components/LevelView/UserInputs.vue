@@ -92,8 +92,8 @@ const index = (i: number, j: number) => {
 <template>
   <!-- USER-ANSWER -->
   <div class="user-answer">
-    <template v-for="(word, i) in actualAnswerWords" :key="i">
-      <div
+    <span v-for="(word, i) in actualAnswerWords" :key="i" class="word">
+      <span
         v-for="(_, j) in word"
         :key="`${i},${j}`"
         @click="onRemoveLetter(index(i, j))"
@@ -107,14 +107,9 @@ const index = (i: number, j: number) => {
         }"
         class="letter-placeholder"
       >
-        {{ letter(index(i, j))?.letter }}
-      </div>
-
-      <div
-        class="letter-placeholder transparent"
-        v-if="i !== actualAnswerWords.length - 1"
-      ></div>
-    </template>
+        {{ letter(index(i, j)).letter }}
+      </span>
+    </span>
   </div>
 
   <!-- LETTER-PICKER -->
@@ -145,8 +140,15 @@ const index = (i: number, j: number) => {
 .user-answer {
   height: 10%;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+}
+
+.word {
+  display: flex;
   gap: 0.5rem;
 }
 
