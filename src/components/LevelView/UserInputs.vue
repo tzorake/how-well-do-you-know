@@ -47,10 +47,7 @@ const onRemoveLetter = (index: number) => {
 
   letters[index] = new Letter("_", index);
 
-  emit(
-    "update:modelValue",
-    letters,
-  );
+  emit("update:modelValue", letters);
 };
 
 const onAddLetter = (index: number) => {
@@ -65,10 +62,7 @@ const onAddLetter = (index: number) => {
     letters[cursor] = new Letter(mixedLetters.value[index], index);
 
     letterStates.value[index] = true;
-    emit(
-      "update:modelValue",
-      letters,
-    );
+    emit("update:modelValue", letters);
   }
 };
 
@@ -150,6 +144,8 @@ const index = (i: number, j: number) => {
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0;
+  cursor: pointer;
+  transition: all 0.1s linear;
 }
 
 .letter-inplace {
@@ -158,7 +154,7 @@ const index = (i: number, j: number) => {
 }
 
 .letter-picker {
-  height: 30%;
+  height: 20%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -177,5 +173,6 @@ const index = (i: number, j: number) => {
 
 .transparent {
   opacity: 0;
+  cursor: default
 }
 </style>

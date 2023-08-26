@@ -26,7 +26,6 @@ import BackLayout from "@/layouts/BackLayout.vue";
 .about__text {
   margin: 1rem;
   font-size: 1.1rem;
-  text-align: justify-all;
   text-align: center;
 }
 
