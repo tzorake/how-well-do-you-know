@@ -1,16 +1,12 @@
 <script setup lang="ts">
 import BackLayout from "@/layouts/BackLayout.vue";
 import LevelListItem from "@/components/LevelListView/LevelListItem.vue";
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { LevelListItemState } from "@/utils/LevelListItemState";
 import { useIonRouter } from "@ionic/vue";
 import { useData } from "@/services/fetchApi";
-import {
-  IonGrid,
-  IonRow,
-  IonCol,
-} from "@ionic/vue";
+import { IonAlert, IonGrid, IonRow, IonCol } from "@ionic/vue";
 
 const data = await useData("/levels/levels.json");
 const levels = data.levels;
@@ -19,6 +15,17 @@ const ionRouter = useIonRouter();
 const lastAvailableLevelIndex = computed(
   () => store.state.lastAvailableLevelIndex
 );
+const isOpenFinishAlert = ref(lastAvailableLevelIndex.value === levels.length);
+const setOpenFinishAlert = async (state: boolean) => {
+  if (state === false) {
+    await store.dispatch(
+      "setLastAvailableLevelIndex",
+      lastAvailableLevelIndex.value + 1
+    );
+  }
+
+  isOpenFinishAlert.value = state;
+};
 
 /**
  *  this function gives state of the item at `index`
@@ -62,7 +69,8 @@ async function onItemClicked(index: number) {
           sizeMd="2"
           sizeLg="1"
           sizeXl="1"
-          v-for="(item, index) in levels">
+          v-for="(item, index) in levels"
+        >
           <LevelListItem
             :imageSrc="item.image"
             :state="itemState(index)"
@@ -72,6 +80,14 @@ async function onItemClicked(index: number) {
         </ion-col>
       </ion-row>
     </ion-grid>
+
+    <ion-alert
+      :is-open="isOpenFinishAlert"
+      header="Приветствуем, уважаемый игрок!"
+      message="Большое спасибо за то, что выбрали нашу игру для своего времяпрепровождения! Мы невероятно рады, что вы нашли в ней интерес и удовольствие. Мы хотели бы попросить вас об одолжении. Ваше мнение важно для нас, и мы были бы признательны, если бы вы оставили свой отзыв о нашей игре на странице Google Play. "
+      :buttons="['ОК']"
+      @didDismiss="setOpenFinishAlert(false)"
+    ></ion-alert>
   </back-layout>
 </template>
 
