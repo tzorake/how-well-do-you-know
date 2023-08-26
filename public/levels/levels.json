@@ -1,15 +1,65 @@
 {
-  "title": "Что за фильм?",
+  "title": "Что за мультфильм?",
   "levels": [
     {
-      "actual_answer": "foo bar",
-      "mixin": "qwejmssmzfma",
-      "image": "/levels/img/1.png"
+      "actual_answer": "Райя",
+      "image": "/levels/img/1.jpg"
     },
     {
-      "actual_answer": "bar foo",
-      "mixin": "jkfbzxndfjaj",
-      "image": "/levels/img/2.png"
+      "actual_answer": "Рио",
+      "image": "/levels/img/2.jpg"
+    },
+    {
+      "actual_answer": "Гадкий я",
+      "image": "/levels/img/3.jpg"
+    },
+    {
+      "actual_answer": "Ну погоди",
+      "image": "/levels/img/4.jpg"
+    },
+    {
+      "actual_answer": "Шрек",
+      "image": "/levels/img/5.jpg"
+    },
+    {
+      "actual_answer": "Ральф",
+      "image": "/levels/img/6.jpg"
+    },
+    {
+      "actual_answer": "Рапунцель",
+      "image": "/levels/img/7.jpg"
+    },
+    {
+      "actual_answer": "Карлсон",
+      "image": "/levels/img/8.jpg"
+    },
+    {
+      "actual_answer": "Рататуй",
+      "image": "/levels/img/9.jpg"
+    },
+    {
+      "actual_answer": "Аладдин",
+      "image": "/levels/img/10.jpg"
+    },
+    {
+      "actual_answer": "Смурфики",
+      "image": "/levels/img/11.jpg"
+    },
+    {
+      "actual_answer": "Супермен",
+      "image": "/levels/img/12.jpg"
+    },
+    {
+      "actual_answer": "Винни пух",
+      "image": "/levels/img/13.jpg"
+    },
+    {
+      "actual_answer": "Русалочка",
+      "image": "/levels/img/14.jpg"
+    },
+    {
+      "actual_answer": "Эверест",
+      "image": "/levels/img/15.jpg"
     }
   ]
 }
