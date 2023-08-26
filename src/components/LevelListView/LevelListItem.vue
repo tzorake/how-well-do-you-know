@@ -69,6 +69,8 @@ const props = defineProps({
   top: 0;
   left: 0;
   font-size: 2rem;
+  font-weight: 600;
+  text-shadow: 1px 1px 5px #000;
 }
 
 @media screen and (max-width: 375px) {
@@ -87,7 +89,7 @@ const props = defineProps({
   padding: 0.25rem;
   font-size: 0.75rem;
   font-weight: 700;
-  --ionicon-stroke-width: 70px;
+  --ionicon-stroke-width: 120px;
 }
 .lock {
   position: absolute;
@@ -98,7 +100,7 @@ const props = defineProps({
   border: 1px solid var(--ion-color-primary);
   padding: 0.25rem;
   font-size: 0.75rem;
-  --ionicon-stroke-width: 70px;
+  --ionicon-stroke-width: 50px;
 }
 
 .cover {

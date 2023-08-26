@@ -38,7 +38,7 @@ const onClickWatchTelegram = async () => {
           size="large"
           :icon="diamondOutline"
         />
-        <strong>+500</strong>
+        <strong class="diamond-button__quantity">+500</strong>
         <span>Посмотреть видео</span>
       </div>
     </ion-button>
@@ -55,7 +55,7 @@ const onClickWatchTelegram = async () => {
           size="large"
           :icon="diamondOutline"
         />
-        <strong>+1000</strong>
+        <strong class="diamond-button__quantity">+1000</strong>
         <span>Поделиться в Вконтакте</span>
       </div>
     </ion-button>
@@ -72,7 +72,7 @@ const onClickWatchTelegram = async () => {
           size="large"
           :icon="diamondOutline"
         />
-        <strong>+1000</strong>
+        <strong class="diamond-button__quantity">+1000</strong>
         <span>Поделиться в Одноклассники</span>
       </div>
     </ion-button>
@@ -89,7 +89,7 @@ const onClickWatchTelegram = async () => {
           size="large"
           :icon="diamondOutline"
         />
-        <strong>+1000</strong>
+        <strong class="diamond-button__quantity">+1000</strong>
         <span slot="end">Поделиться в Telegram</span>
       </div>
     </ion-button>
@@ -109,6 +109,10 @@ const onClickWatchTelegram = async () => {
   width: 100%;
   padding: 1rem 0;
   font-size: 0.9rem;
+}
+
+.diamond-button__quantity {
+  width: 3rem;
 }
 
 @media screen and (max-width: 375px) {
