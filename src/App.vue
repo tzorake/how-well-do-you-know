@@ -7,6 +7,7 @@
 </template>
 
 <script setup lang="ts">
+import { StatusBar } from "@capacitor/status-bar";
 import { IonApp, IonRouterOutlet } from "@ionic/vue";
 import { useStore } from "vuex";
 import { onBeforeMount, ref } from "vue";
@@ -21,6 +22,9 @@ onBeforeMount(async () => {
   await fetchCurrentLevelIndex();
   await fetchLastAvailableLevelIndex();
   await fetchDiamonds();
+  await StatusBar.setBackgroundColor({
+    color: "#148485",
+  });
   initialized.value = true;
 });
 </script>
