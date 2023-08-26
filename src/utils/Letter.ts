@@ -1,12 +1,16 @@
+import { LetterState } from "./LetterState";
+
 export class Letter
 {
   letter: string;
   index: number;
+  state: LetterState;
 
-  constructor(letter: string, index: number)
+  constructor(letter: string, index: number, state: LetterState = LetterState.DEFAULT)
   {
     this.letter = letter;
     this.index = index;
+    this.state = state;
   }
 
   static toLetters(inputString: string): Letter[]
@@ -22,5 +26,9 @@ export class Letter
   copy(): Letter
   {
     return new Letter(this.letter, this.index);
+  }
+
+  setState(state: LetterState) {
+    this.state = state;
   }
 }

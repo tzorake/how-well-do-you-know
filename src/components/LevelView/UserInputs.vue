@@ -3,9 +3,10 @@ import { shuffle } from "@/utils/StringUtils";
 import { computed, ref, watch } from "vue";
 import AppLetter from "@/components/LevelView/AppLetter.vue";
 import { Letter } from "@/utils/Letter";
+import { LetterState } from "@/utils/LetterState";
 
 const props = defineProps({
-  modelValue: {
+  userAnswer: {
     type: Array<Letter>,
     required: true,
   },
@@ -18,7 +19,7 @@ const props = defineProps({
     required: true,
   },
 });
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:letter"]);
 
 const rowLength = ref<number>(9);
 
@@ -41,13 +42,17 @@ watch(
 );
 
 const onRemoveLetter = (index: number) => {
-  const letters = props.modelValue.map((l) => l.copy());
-  const stateIndex = letters[index].index;
-  letterStates.value[stateIndex] = false;
+  const letter = props.userAnswer[index];
+  const cursor = letter.index;
 
-  letters[index] = new Letter("_", index);
+  if (letter.state === LetterState.BLOCKED) {
+    return;
+  }
 
-  emit("update:modelValue", letters);
+  const newLetter = new Letter("_", letter.index, letter.state);
+  letterStates.value[cursor] = false;
+
+  emit("update:letter", index, newLetter);
 };
 
 const onAddLetter = (index: number) => {
@@ -55,19 +60,24 @@ const onAddLetter = (index: number) => {
     return;
   }
 
-  const letters = props.modelValue.map((l) => l.copy());
+  const letters = props.userAnswer;
   const cursor = letters.findIndex((l) => l.letter === "_");
+  const letter = letters.at(cursor);
 
-  if (cursor > -1 && letters.at(cursor)?.letter === "_") {
-    letters[cursor] = new Letter(mixedLetters.value[index], index);
-
+  if (cursor > -1 && letter?.letter === "_") {
+    const newLetter = new Letter(
+      mixedLetters.value[index],
+      index,
+      letter?.state
+    );
     letterStates.value[index] = true;
-    emit("update:modelValue", letters);
+
+    emit("update:letter", cursor, newLetter);
   }
 };
 
 const letter = (index: number) => {
-  return props.modelValue.at(index);
+  return props.userAnswer[index];
 };
 
 const index = (i: number, j: number) => {
@@ -82,22 +92,24 @@ const index = (i: number, j: number) => {
 <template>
   <!-- USER-ANSWER -->
   <div class="user-answer">
-    <template v-for="(word, i) in actualAnswerWords" :key="i">
-      <div
+    <span v-for="(word, i) in actualAnswerWords" :key="i" class="word">
+      <span
         v-for="(_, j) in word"
         :key="`${i},${j}`"
         @click="onRemoveLetter(index(i, j))"
-        :class="{ 'letter-inplace': letter(index(i, j))?.letter !== '_' }"
+        :class="{
+          'letter-inplace':
+            letter(index(i, j)).state !== LetterState.BLOCKED &&
+            letter(index(i, j)).letter !== '_',
+          'letter-blocked':
+            letter(index(i, j)).state === LetterState.BLOCKED &&
+            letter(index(i, j)).letter !== '_',
+        }"
         class="letter-placeholder"
       >
-        {{ letter(index(i, j))?.letter }}
-      </div>
-
-      <div
-        class="letter-placeholder transparent"
-        v-if="i !== actualAnswerWords.length - 1"
-      ></div>
-    </template>
+        {{ letter(index(i, j)).letter }}
+      </span>
+    </span>
   </div>
 
   <!-- LETTER-PICKER -->
@@ -128,8 +140,15 @@ const index = (i: number, j: number) => {
 .user-answer {
   height: 10%;
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 2.5rem;
+}
+
+.word {
+  display: flex;
   gap: 0.5rem;
 }
 
@@ -150,6 +169,11 @@ const index = (i: number, j: number) => {
 
 .letter-inplace {
   border-bottom: 3px solid var(--ion-color-primary);
+  font-size: 1rem;
+}
+
+.letter-blocked {
+  border-bottom: 3px solid var(--ion-color-warning);
   font-size: 1rem;
 }
 

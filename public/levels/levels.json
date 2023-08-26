@@ -3,15 +3,18 @@
   "levels": [
     {
       "actual_answer": "Райя",
-      "image": "/levels/img/1.jpg"
+      "image": "/levels/img/1.jpg",
+      "opened": [0]
     },
     {
       "actual_answer": "Рио",
-      "image": "/levels/img/2.jpg"
+      "image": "/levels/img/2.jpg",
+      "opened": [1]
     },
     {
       "actual_answer": "Гадкий я",
-      "image": "/levels/img/3.jpg"
+      "image": "/levels/img/3.jpg",
+      "opened": [0, 4]
     },
     {
       "actual_answer": "Ну погоди",
