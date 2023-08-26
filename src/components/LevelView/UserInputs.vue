@@ -18,6 +18,10 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  opened: {
+    type: Array<number>,
+    required: true,
+  },
 });
 const emit = defineEmits(["update:letter"]);
 
@@ -36,7 +40,9 @@ const letterStates = ref<boolean[]>([]);
 watch(
   mixedLetters,
   () => {
-    letterStates.value = new Array(mixedLetters.value.length).fill(false);
+    const states = new Array(mixedLetters.value.length).fill(false);
+    props.opened.forEach(index => states[index] = true);
+    letterStates.value = states;
   },
   { immediate: true }
 );
@@ -163,8 +169,6 @@ const index = (i: number, j: number) => {
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0;
-  cursor: pointer;
-  transition: all 0.1s linear;
 }
 
 .letter-inplace {
@@ -178,7 +182,7 @@ const index = (i: number, j: number) => {
 }
 
 .letter-picker {
-  height: 20%;
+  height: 30%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -197,6 +201,5 @@ const index = (i: number, j: number) => {
 
 .transparent {
   opacity: 0;
-  cursor: default
 }
 </style>

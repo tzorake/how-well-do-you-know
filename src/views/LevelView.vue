@@ -1,16 +1,33 @@
 <script setup lang="ts">
-import { IonButton, IonIcon } from "@ionic/vue";
-import { computed, ref, watch } from "vue";
-import { useData } from "@/services/fetchApi";
-import { Letter } from "@/utils/Letter";
-import { generateUniqueRandomLetters } from "@/utils/StringUtils";
 import {
+  IonHeader,
+  IonButtons,
+  IonToolbar,
+  IonMenu,
+  IonTitle,
+  IonContent,
+  IonMenuButton,
+  IonButton,
+  IonPage,
+  IonMenuToggle,
+  IonIcon,
+  IonItem,
+  IonFooter,
+  IonGrid,
+  IonRow,
+  IonCol,
+} from "@ionic/vue";
+import {
+  diamondOutline,
   playForwardOutline,
   desktopOutline,
   trashBinOutline,
   eyeOutline,
 } from "ionicons/icons";
-import MainLayout from "@/layouts/MainLayout.vue";
+import { computed, ref, watch } from "vue";
+import { useData } from "@/services/fetchApi";
+import { Letter } from "@/utils/Letter";
+import { generateUniqueRandomLetters } from "@/utils/StringUtils";
 import UserInputs from "@/components/LevelView/UserInputs.vue";
 
 import { useStore } from "vuex";
@@ -19,16 +36,23 @@ const store = useStore();
 import { useIonRouter } from "@ionic/vue";
 import { LetterState } from "@/utils/LetterState";
 const ionRouter = useIonRouter();
+const paths = [
+  { name: "Об игре", url: "/about" },
+  { name: "Поделиться", url: "/share" },
+  { name: "Алмазы", url: "/diamond" },
+  { name: "Уровни", url: "/levels" },
+];
 
 const data = await useData("/levels/levels.json");
 const levels = data.levels;
+const diamonds = computed(() => store.state.diamonds);
 const currentLevelIndex = computed(() => store.state.currentLevelIndex);
 const levelTitle = computed(() => data.title);
 const imageSrc = computed(() => levels[currentLevelIndex.value].image);
-const actualAnswer = computed(() =>
-  levels[currentLevelIndex.value].actual_answer.toLowerCase()
-);
 const opened = computed(() => levels[currentLevelIndex.value].opened);
+const actualAnswer = computed(
+  () => levels[currentLevelIndex.value].actual_answer
+);
 const actualAnswerLetters = computed(() => {
   return actualAnswer.value.replaceAll(" ", "");
 });
@@ -54,7 +78,7 @@ watch(
         }
       });
     }
-    userAnswer.value = letters.filter((item) => item.letter !== " ");
+    userAnswer.value = letters.filter(item => item.letter !== " ");
   },
   { immediate: true }
 );
@@ -72,43 +96,123 @@ watch(isLevelFinished, (newValue) => {
 function onLetterChanged(cursor: number, letter: Letter) {
   userAnswer.value[cursor] = letter;
 }
+
 </script>
 
 <template>
-  <main-layout>
-    <div class="level-title">
-      <p class="level-title__text">
-        {{ levelTitle }}
-      </p>
-    </div>
-    <img class="level-image" alt="level-image" :src="imageSrc" />
+  <ion-page>
+    <ion-menu content-id="main-content">
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>Меню</ion-title>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content>
+        <IonMenuToggle v-for="path in paths" :key="path.name" :autoHide="false">
+          <IonItem :routerLink="path.url" router-direction="forward">
+            {{ path.name }}
+          </IonItem>
+        </IonMenuToggle>
+      </ion-content>
+    </ion-menu>
 
-    <UserInputs
-      :userAnswer="userAnswer"
-      :actual-answer="actualAnswer"
-      :mixin="mixin"
-      @update:letter="onLetterChanged"
-    ></UserInputs>
+    <!-- HEADER -->
+    <ion-header>
+      <ion-toolbar color="primary">
+        <ion-buttons slot="start">
+          <ion-menu-button></ion-menu-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+          <ion-button routerLink="/levels"
+            >Уровень: {{ currentLevelIndex + 1 }}</ion-button
+          >
+          <ion-button routerLink="/diamond"
+            >{{ diamonds }}
+            <ion-icon slot="end" :icon="diamondOutline" />
+          </ion-button>
+        </ion-buttons>
+        <ion-title></ion-title>
+      </ion-toolbar>
+    </ion-header>
 
-    <div class="hints">
-      <ion-button fill="outline" color="tertiary">
-        <ion-icon size="large" slot="start" :icon="eyeOutline"></ion-icon>
-        <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
-      </ion-button>
-      <ion-button fill="outline" color="tertiary">
-        <ion-icon size="large" slot="start" :icon="trashBinOutline"></ion-icon>
-        <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon
-      ></ion-button>
-      <ion-button fill="outline" color="tertiary">
-        <ion-icon
-          size="large"
-          slot="start"
-          :icon="playForwardOutline"
-        ></ion-icon>
-        <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
-      </ion-button>
-    </div>
-  </main-layout>
+    <!-- CONTENT -->
+    <ion-content id="main-content" class="ion-no-padding" :scroll-y="false">
+      <ion-grid class="ion-no-padding" style="height: 100%" fixed>
+        <ion-row class="ion-justify-content-center" style="height: 100%">
+          <ion-col
+            size="12"
+            sizeMd="8"
+            sizeLg="6"
+            sizeXl="4"
+            style="height: 100%"
+          >
+            <div class="level-title">
+              <p class="level-title__text">
+                {{ levelTitle }}
+              </p>
+            </div>
+            <img class="level-image" alt="level-image" :src="imageSrc" />
+
+            <UserInputs
+              :user-answer="userAnswer"
+              :actual-answer="actualAnswer"
+              :mixin="mixin"
+              :opened="opened"
+              @update:letter="onLetterChanged"
+            ></UserInputs>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+
+    <!-- FOOTER -->
+    <ion-footer>
+      <ion-grid fixed>
+        <ion-row class="ion-justify-content-center">
+          <ion-col size="12" sizeMd="8" sizeLg="6" sizeXl="4">
+            <div class="footer">
+              <ion-button shape="round" fill="outline" color="tertiary">
+                <ion-icon
+                  size="large"
+                  slot="start"
+                  :icon="eyeOutline"
+                ></ion-icon>
+                <ion-icon
+                  size="large"
+                  slot="end"
+                  :icon="desktopOutline"
+                ></ion-icon>
+              </ion-button>
+              <ion-button shape="round" fill="outline" color="tertiary">
+                <ion-icon
+                  size="large"
+                  slot="start"
+                  :icon="trashBinOutline"
+                ></ion-icon>
+                <ion-icon
+                  size="large"
+                  slot="end"
+                  :icon="desktopOutline"
+                ></ion-icon
+              ></ion-button>
+              <ion-button shape="round" fill="outline" color="tertiary">
+                <ion-icon
+                  size="large"
+                  slot="start"
+                  :icon="playForwardOutline"
+                ></ion-icon>
+                <ion-icon
+                  size="large"
+                  slot="end"
+                  :icon="desktopOutline"
+                ></ion-icon>
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-footer>
+  </ion-page>
 </template>
 
 <style scoped>
@@ -133,11 +237,9 @@ function onLetterChanged(cursor: number, letter: Letter) {
   object-fit: cover;
 }
 
-.hints {
+.footer {
   display: flex;
   justify-content: space-between;
-  height: 7%;
-  padding: 0 5px;
 }
 
 ion-button {
