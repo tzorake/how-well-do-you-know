@@ -29,7 +29,7 @@ export default createStore({
     async setCurrentLevelIndex({ commit }, value) {
       await Preferences.set({
         key: "level-index",
-        value,
+        value: String(value),
       });
       commit("mutateCurrentLevelIndex", value);
     },
@@ -46,7 +46,7 @@ export default createStore({
     async setLastAvailableLevelIndex({ commit, dispatch }, value) {
       await Preferences.set({
         key: "last-available-level-index",
-        value,
+        value: String(value),
       });
       commit("mutateLastAvailableLevelIndex", value);
       dispatch("addDiamonds", 100);
