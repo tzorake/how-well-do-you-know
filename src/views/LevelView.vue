@@ -34,6 +34,7 @@ import { useStore } from "vuex";
 const store = useStore();
 
 import { useIonRouter } from "@ionic/vue";
+import { LetterState } from "@/utils/LetterState";
 const ionRouter = useIonRouter();
 const paths = [
   { name: "Об игре", url: "/about" },
@@ -48,6 +49,7 @@ const diamonds = computed(() => store.state.diamonds);
 const currentLevelIndex = computed(() => store.state.currentLevelIndex);
 const levelTitle = computed(() => data.title);
 const imageSrc = computed(() => levels[currentLevelIndex.value].image);
+const opened = computed(() => levels[currentLevelIndex.value].opened);
 const actualAnswer = computed(
   () => levels[currentLevelIndex.value].actual_answer
 );
@@ -66,9 +68,17 @@ const userAnswer = ref<Letter[]>([]);
 watch(
   currentLevelIndex,
   () => {
-    userAnswer.value = Letter.toLetters(
-      actualAnswer.value.replaceAll(/[а-яА-Я]/g, "_").replaceAll(/\s/g, "")
-    );
+    const word = actualAnswer.value.replaceAll(/[а-яА-Я]/g, "_");
+    const letters = Letter.toLetters(word);
+    if (opened.value != null && opened.value instanceof Array) {
+      letters.forEach((letter, index) => {
+        if (opened.value.includes(index)) {
+          letter.letter = actualAnswer.value[index];
+          letter.state = LetterState.BLOCKED;
+        }
+      });
+    }
+    userAnswer.value = letters.filter(item => item.letter !== " ");
   },
   { immediate: true }
 );
@@ -82,6 +92,11 @@ watch(isLevelFinished, (newValue) => {
     ionRouter.navigate("/next-level/", "forward", "push");
   }
 });
+
+function onLetterChanged(cursor: number, letter: Letter) {
+  userAnswer.value[cursor] = letter;
+}
+
 </script>
 
 <template>
@@ -139,9 +154,10 @@ watch(isLevelFinished, (newValue) => {
             <img class="level-image" alt="level-image" :src="imageSrc" />
 
             <UserInputs
-              v-model="userAnswer"
+              :userAnswer="userAnswer"
               :actual-answer="actualAnswer"
               :mixin="mixin"
+              @update:letter="onLetterChanged"
             ></UserInputs>
           </ion-col>
         </ion-row>
