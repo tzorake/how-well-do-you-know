@@ -41,14 +41,15 @@ watch(
 );
 
 const onRemoveLetter = (index: number) => {
-  const stateIndex = props.modelValue[index].index;
+  const letters = props.modelValue.map((l) => l.copy());
+  const stateIndex = letters[index].index;
   letterStates.value[stateIndex] = false;
 
-  props.modelValue[index] = new Letter("_", index);
+  letters[index] = new Letter("_", index);
 
   emit(
     "update:modelValue",
-    props.modelValue.map((l) => l.copy())
+    letters,
   );
 };
 
@@ -57,15 +58,16 @@ const onAddLetter = (index: number) => {
     return;
   }
 
-  const cursor = props.modelValue.findIndex((l) => l.letter === "_");
+  const letters = props.modelValue.map((l) => l.copy());
+  const cursor = letters.findIndex((l) => l.letter === "_");
 
-  if (cursor > -1 && props.modelValue.at(cursor)?.letter === "_") {
-    props.modelValue[cursor] = new Letter(mixedLetters.value[index], index);
+  if (cursor > -1 && letters.at(cursor)?.letter === "_") {
+    letters[cursor] = new Letter(mixedLetters.value[index], index);
 
     letterStates.value[index] = true;
     emit(
       "update:modelValue",
-      props.modelValue.map((l) => l.copy())
+      letters,
     );
   }
 };
