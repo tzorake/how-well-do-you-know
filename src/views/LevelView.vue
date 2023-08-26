@@ -27,6 +27,7 @@ import {
 import { computed, ref, watch } from "vue";
 import { useData } from "@/services/fetchApi";
 import { Letter } from "@/utils/Letter";
+import { generateUniqueRandomLetters } from "@/utils/StringUtils";
 import UserInputs from "@/components/LevelView/UserInputs.vue";
 
 import { useStore } from "vuex";
@@ -38,6 +39,7 @@ const paths = [
   { name: "Об игре", url: "/about" },
   { name: "Поделиться", url: "/share" },
   { name: "Алмазы", url: "/diamond" },
+  { name: "Уровни", url: "/levels" },
 ];
 
 const data = await useData("/levels/levels.json");
@@ -46,12 +48,17 @@ const diamonds = computed(() => store.state.diamonds);
 const currentLevelIndex = computed(() => store.state.currentLevelIndex);
 const levelTitle = computed(() => data.title);
 const imageSrc = computed(() => levels[currentLevelIndex.value].image);
-const mixin = computed(() => levels[currentLevelIndex.value].mixin);
 const actualAnswer = computed(
   () => levels[currentLevelIndex.value].actual_answer
 );
 const actualAnswerLetters = computed(() => {
   return actualAnswer.value.replaceAll(" ", "");
+});
+const mixin = computed(() => {
+  const lettersArr = actualAnswerLetters.value.split("");
+  return generateUniqueRandomLetters(lettersArr, 18 - lettersArr.length).join(
+    ""
+  );
 });
 
 const userAnswer = ref<Letter[]>([]);
@@ -60,7 +67,7 @@ watch(
   currentLevelIndex,
   () => {
     userAnswer.value = Letter.toLetters(
-      actualAnswer.value.replaceAll(/\w/g, "_").replaceAll(/\s/g, "")
+      actualAnswer.value.replaceAll(/[а-яА-Я]/g, "_").replaceAll(/\s/g, "")
     );
   },
   { immediate: true }

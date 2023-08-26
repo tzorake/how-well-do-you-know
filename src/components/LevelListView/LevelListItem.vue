@@ -20,14 +20,23 @@ const props = defineProps({
 <template>
   <div class="level-icon">
     <div class="cover">
-      <img class="image" alt="" :src="props.imageSrc" v-if="props.state !== LevelListItemState.LOCKED"/>
+      <img
+        class="image"
+        alt=""
+        :src="props.imageSrc"
+        v-if="props.state !== LevelListItemState.LOCKED"
+      />
       <div class="image-placeholder" v-else></div>
     </div>
     <div class="text">
-      <span class="level-id" :class="{ 'lock-text-color': props.state === LevelListItemState.LOCKED }">
+      <span
+        class="level-id"
+        :class="{
+          'lock-text-color': props.state === LevelListItemState.LOCKED,
+        }"
+      >
         <slot></slot>
       </span>
-      <span class="play-text" v-if="props.state === LevelListItemState.CURRENT">Play</span>
     </div>
     <ion-icon
       class="mark"
@@ -59,6 +68,13 @@ const props = defineProps({
   height: 100%;
   top: 0;
   left: 0;
+  font-size: 2rem;
+}
+
+@media screen and (max-width: 375px) {
+  .text {
+    font-size: 1.5rem;
+  }
 }
 
 .mark {
@@ -70,6 +86,8 @@ const props = defineProps({
   border: 1px solid var(--ion-color-primary);
   padding: 0.25rem;
   font-size: 0.75rem;
+  font-weight: 700;
+  --ionicon-stroke-width: 70px;
 }
 .lock {
   position: absolute;
@@ -80,6 +98,7 @@ const props = defineProps({
   border: 1px solid var(--ion-color-primary);
   padding: 0.25rem;
   font-size: 0.75rem;
+  --ionicon-stroke-width: 70px;
 }
 
 .cover {
@@ -87,7 +106,8 @@ const props = defineProps({
   aspect-ratio: 1 / 1;
 }
 
-.image, .image-placeholder {
+.image,
+.image-placeholder {
   width: 100%;
   object-fit: cover;
   aspect-ratio: 1 / 1;
