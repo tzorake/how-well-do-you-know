@@ -1,9 +1,17 @@
 <script setup lang="ts">
 import { useData } from "@/services/fetchApi";
-import { IonButton, IonIcon, IonLabel } from "@ionic/vue";
+import {
+  IonPage,
+  IonContent,
+  IonButton,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonIcon,
+  IonLabel,
+} from "@ionic/vue";
 import { computed } from "vue";
 import { diamondOutline, happyOutline, sadOutline } from "ionicons/icons";
-import MainLayout from "@/layouts/MainLayout.vue";
 
 import { useStore } from "vuex";
 const store = useStore();
@@ -25,15 +33,14 @@ const actualAnswer = computed(
 );
 
 async function onContinue() {
+  if (currentLevelIndex.value >= levels.length - 1) {
+    return;
+  }
+
   const newLevelIndex = currentLevelIndex.value + 1;
 
   if (currentLevelIndex.value === lastAvailableLevelIndex.value) {
     await store.dispatch("setLastAvailableLevelIndex", newLevelIndex);
-  }
-
-  if (newLevelIndex === levels.length) {
-    ionRouter.navigate("/levels/", "forward", "push");
-    return;
   }
 
   await store.dispatch("setCurrentLevelIndex", newLevelIndex);
@@ -43,34 +50,54 @@ async function onContinue() {
 </script>
 
 <template>
-  <main-layout>
-    <div class="level-title">
-      <p class="level-title__text">Отлично!</p>
-    </div>
-    <img class="level-image" alt="level-image" :src="imageSrc" />
+  <ion-page>
+    <ion-content :scroll-y="false">
+      <ion-grid class="ion-no-padding" style="height: 100%" fixed>
+        <ion-row class="ion-justify-content-center" style="height: 100%">
+          <ion-col
+            size="12"
+            sizeMd="8"
+            sizeLg="6"
+            sizeXl="4"
+            style="height: 100%"
+          >
+            <div class="level-title">
+              <p class="level-title__text">Отлично!</p>
+            </div>
+            <img class="level-image" alt="level-image" :src="imageSrc" />
 
-    <div class="level-answer">
-      {{ actualAnswer }}
-      <ion-label class="reward">
-        <span>+100</span>
-        <ion-icon slot="end" :icon="diamondOutline" />
-      </ion-label>
-    </div>
+            <div class="level-answer">
+              {{ actualAnswer }}
+              <ion-label class="reward">
+                <span>+100</span>
+                <ion-icon slot="end" :icon="diamondOutline" />
+              </ion-label>
+            </div>
 
-    <div class="buttons">
-      <ion-button @click="onContinue" class="boring-button" color="danger"
-        >Скучно
-        <ion-icon slot="end" :icon="sadOutline" />
-      </ion-button>
-      <ion-button @click="onContinue" class="fun-button" color="success"
-        >Отлично
-        <ion-icon slot="end" :icon="happyOutline" />
-      </ion-button>
-      <ion-button @click="onContinue" class="continue-button" color="secondary"
-        >Продолжить
-      </ion-button>
-    </div>
-  </main-layout>
+            <div class="buttons">
+              <ion-button
+                @click="onContinue"
+                class="boring-button"
+                color="danger"
+                >Скучно
+                <ion-icon slot="end" :icon="sadOutline" />
+              </ion-button>
+              <ion-button @click="onContinue" class="fun-button" color="success"
+                >Отлично
+                <ion-icon slot="end" :icon="happyOutline" />
+              </ion-button>
+              <ion-button
+                @click="onContinue"
+                class="continue-button"
+                color="secondary"
+                >Продолжить
+              </ion-button>
+            </div>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-content>
+  </ion-page>
 </template>
 
 <style scoped>
@@ -80,7 +107,7 @@ async function onContinue() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 1.78rem;
+  font-size: 2rem;
 }
 
 .level-image {
