@@ -91,12 +91,15 @@ const index = (i: number, j: number) => {
         :key="`${i},${j}`"
         @click="onRemoveLetter(index(i, j))"
         :class="{
-          'letter-inplace':
+          'inplace-letter':
             letter(index(i, j)).state !== LetterState.BLOCKED &&
             letter(index(i, j)).character !== '_',
-          'letter-blocked':
+          'blocked-letter':
             letter(index(i, j)).state === LetterState.BLOCKED &&
             letter(index(i, j)).character !== '_',
+          'wrong-letter':
+            letter(index(i, j)).state !== LetterState.BLOCKED &&
+            !Letter.toString(props.userAnswer).includes('_'),
         }"
         class="letter-placeholder"
       >
@@ -162,12 +165,13 @@ const index = (i: number, j: number) => {
   transition: all 0.1s linear;
 }
 
-.letter-inplace {
+.inplace-letter {
   border-bottom: 3px solid var(--ion-color-primary);
   font-size: 1rem;
 }
 
-.letter-blocked {
+.blocked-letter {
+  color: var(--ion-color-warning);
   border-bottom: 3px solid var(--ion-color-warning);
   font-size: 1rem;
 }
@@ -188,6 +192,11 @@ const index = (i: number, j: number) => {
   align-items: center;
   gap: 0.5rem;
   margin: 0 0.5rem;
+}
+
+.wrong-letter {
+  color: var(--ion-color-danger) !important;
+  border-color: var(--ion-color-danger);
 }
 
 .transparent {

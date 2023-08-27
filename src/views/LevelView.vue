@@ -30,8 +30,16 @@ const actualAnswer = computed(() =>
 );
 const opened = computed(() => levels[currentLevelIndex.value].opened);
 const userAnswer = ref<Letter[]>([]);
-const letterPickerCollection = computed(() => new LetterPickerCollection(actualAnswer.value, opened.value));
-const letterPickerState = computed(() => letterPickerCollection.value.letterPickerState);
+const letterPickerCollection = computed(
+  () => new LetterPickerCollection(actualAnswer.value, opened.value)
+);
+const letterPickerState = computed(
+  () => letterPickerCollection.value.letterPickerState
+);
+const actualAnswerWithoutSpaces = computed(
+  () => letterPickerCollection.value.actualAnswerWithoutSpaces
+);
+
 watch(
   currentLevelIndex,
   () => {
@@ -51,7 +59,7 @@ watch(
 );
 
 const isLevelFinished = computed(
-  () => letterPickerCollection.value.actualAnswerWithoutSpaces === Letter.toString(userAnswer.value)
+  () => actualAnswerWithoutSpaces.value === Letter.toString(userAnswer.value)
 );
 
 watch(isLevelFinished, (newValue) => {
