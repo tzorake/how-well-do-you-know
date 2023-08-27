@@ -1,45 +1,38 @@
 <script setup lang="ts">
-import { shuffle } from "@/utils/StringUtils";
 import { computed, ref, watch } from "vue";
 import AppLetter from "@/components/LevelView/AppLetter.vue";
 import { Letter } from "@/utils/Letter";
 import { LetterState } from "@/utils/LetterState";
+import { LetterPickerCollection } from "@/utils/LetterPickerCollection";
 
 const props = defineProps({
   userAnswer: {
     type: Array<Letter>,
     required: true,
   },
-  actualAnswer: {
-    type: String,
-    required: true,
-  },
-  mixin: {
-    type: String,
+  letterPickerCollection: {
+    type: LetterPickerCollection,
     required: true,
   },
 });
-const emit = defineEmits(["update:letter"]);
+
+const emit = defineEmits(["update:letter", "update:letter-picker-state"]);
 
 const rowLength = ref<number>(9);
 
 const actualAnswerWords = computed(() => {
-  return props.actualAnswer.split(" ");
+  return props.letterPickerCollection.actualAnswerWords;
 });
 
 const mixedLetters = computed(() => {
-  const word = props.actualAnswer.replaceAll(" ", "") + props.mixin;
-  return shuffle(word);
+  return props.letterPickerCollection.mixedLetters;
 });
-const letterStates = ref<boolean[]>([]);
 
-watch(
-  mixedLetters,
-  () => {
-    letterStates.value = new Array(mixedLetters.value.length).fill(false);
-  },
-  { immediate: true }
-);
+const letterPickerState = computed(() => {
+  return props.letterPickerCollection.letterPickerState;
+});
+
+watch(mixedLetters, () => {}, { immediate: true });
 
 const onRemoveLetter = (index: number) => {
   const letter = props.userAnswer[index];
@@ -50,29 +43,29 @@ const onRemoveLetter = (index: number) => {
   }
 
   const newLetter = new Letter("_", letter.index, letter.state);
-  letterStates.value[cursor] = false;
 
   emit("update:letter", index, newLetter);
+  emit("update:letter-picker-state", cursor, false);
 };
 
 const onAddLetter = (index: number) => {
-  if (letterStates.value[index]) {
+  if (letterPickerState.value[index]) {
     return;
   }
 
   const letters = props.userAnswer;
-  const cursor = letters.findIndex((l) => l.letter === "_");
-  const letter = letters.at(cursor);
+  const cursor = letters.findIndex((l) => l.character === "_");
+  const letter = letters[cursor];
 
-  if (cursor > -1 && letter?.letter === "_") {
+  if (cursor > -1 && letter.character === "_") {
     const newLetter = new Letter(
       mixedLetters.value[index],
       index,
-      letter?.state
+      letter.state
     );
-    letterStates.value[index] = true;
 
     emit("update:letter", cursor, newLetter);
+    emit("update:letter-picker-state", index, true);
   }
 };
 
@@ -100,14 +93,14 @@ const index = (i: number, j: number) => {
         :class="{
           'letter-inplace':
             letter(index(i, j)).state !== LetterState.BLOCKED &&
-            letter(index(i, j)).letter !== '_',
+            letter(index(i, j)).character !== '_',
           'letter-blocked':
             letter(index(i, j)).state === LetterState.BLOCKED &&
-            letter(index(i, j)).letter !== '_',
+            letter(index(i, j)).character !== '_',
         }"
         class="letter-placeholder"
       >
-        {{ letter(index(i, j)).letter }}
+        {{ letter(index(i, j)).character }}
       </span>
     </span>
   </div>
@@ -128,7 +121,9 @@ const index = (i: number, j: number) => {
         :style="{
           width: `calc((100% - ${rowLength - 1}*0.5rem) / ${rowLength})`,
         }"
-        :class="{ transparent: letterStates[(rowIndex - 1) * rowLength + i] }"
+        :class="{
+          transparent: letterPickerState[(rowIndex - 1) * rowLength + i],
+        }"
         @click="onAddLetter((rowIndex - 1) * rowLength + i)"
         >{{ letter }}
       </AppLetter>
@@ -197,6 +192,6 @@ const index = (i: number, j: number) => {
 
 .transparent {
   opacity: 0;
-  cursor: default
+  cursor: default;
 }
 </style>

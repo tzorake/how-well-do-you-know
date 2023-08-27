@@ -2,13 +2,13 @@ import { LetterState } from "./LetterState";
 
 export class Letter
 {
-  letter: string;
+  character: string;
   index: number;
   state: LetterState;
 
-  constructor(letter: string, index: number, state: LetterState = LetterState.DEFAULT)
+  constructor(character: string, index: number, state: LetterState = LetterState.DEFAULT)
   {
-    this.letter = letter;
+    this.character = character;
     this.index = index;
     this.state = state;
   }
@@ -20,15 +20,11 @@ export class Letter
 
   static toString(letters: Letter[]): string
   {
-    return letters.reduce((acc, curr) => acc + curr.letter, "");
+    return letters.reduce((acc, curr) => acc + curr.character, "");
   }
 
   copy(): Letter
   {
-    return new Letter(this.letter, this.index);
-  }
-
-  setState(state: LetterState) {
-    this.state = state;
+    return new Letter(this.character, this.index);
   }
 }

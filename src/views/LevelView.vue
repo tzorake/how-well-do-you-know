@@ -3,7 +3,6 @@ import { IonButton, IonIcon } from "@ionic/vue";
 import { computed, ref, watch } from "vue";
 import { useData } from "@/services/fetchApi";
 import { Letter } from "@/utils/Letter";
-import { generateUniqueRandomLetters } from "@/utils/StringUtils";
 import {
   playForwardOutline,
   desktopOutline,
@@ -17,6 +16,7 @@ import { useStore } from "vuex";
 const store = useStore();
 
 import { useIonRouter } from "@ionic/vue";
+import { LetterPickerCollection } from "@/utils/LetterPickerCollection";
 import { LetterState } from "@/utils/LetterState";
 const ionRouter = useIonRouter();
 
@@ -29,18 +29,9 @@ const actualAnswer = computed(() =>
   levels[currentLevelIndex.value].actual_answer.toLowerCase()
 );
 const opened = computed(() => levels[currentLevelIndex.value].opened);
-const actualAnswerLetters = computed(() => {
-  return actualAnswer.value.replaceAll(" ", "");
-});
-const mixin = computed(() => {
-  const lettersArr = actualAnswerLetters.value.split("");
-  return generateUniqueRandomLetters(lettersArr, 18 - lettersArr.length).join(
-    ""
-  );
-});
-
 const userAnswer = ref<Letter[]>([]);
-
+const letterPickerCollection = computed(() => new LetterPickerCollection(actualAnswer.value, opened.value));
+const letterPickerState = computed(() => letterPickerCollection.value.letterPickerState);
 watch(
   currentLevelIndex,
   () => {
@@ -49,18 +40,18 @@ watch(
     if (opened.value != null && opened.value instanceof Array) {
       letters.forEach((letter, index) => {
         if (opened.value.includes(index)) {
-          letter.letter = actualAnswer.value[index];
+          letter.character = actualAnswer.value[index];
           letter.state = LetterState.BLOCKED;
         }
       });
     }
-    userAnswer.value = letters.filter((item) => item.letter !== " ");
+    userAnswer.value = letters.filter((item) => item.character !== " ");
   },
   { immediate: true }
 );
 
 const isLevelFinished = computed(
-  () => actualAnswerLetters.value === Letter.toString(userAnswer.value)
+  () => letterPickerCollection.value.actualAnswerWithoutSpaces === Letter.toString(userAnswer.value)
 );
 
 watch(isLevelFinished, (newValue) => {
@@ -69,8 +60,12 @@ watch(isLevelFinished, (newValue) => {
   }
 });
 
-function onLetterChanged(cursor: number, letter: Letter) {
-  userAnswer.value[cursor] = letter;
+function onLetterChanged(index: number, letter: Letter) {
+  userAnswer.value[index] = letter;
+}
+
+function onLetterPickerStateChanged(index: number, state: boolean) {
+  letterPickerState.value[index] = state;
 }
 </script>
 
@@ -84,10 +79,10 @@ function onLetterChanged(cursor: number, letter: Letter) {
     <img class="level-image" alt="level-image" :src="imageSrc" />
 
     <UserInputs
-      :userAnswer="userAnswer"
-      :actual-answer="actualAnswer"
-      :mixin="mixin"
+      :user-answer="userAnswer"
       @update:letter="onLetterChanged"
+      :letter-picker-collection="letterPickerCollection"
+      @update:letter-picker-state="onLetterPickerStateChanged"
     ></UserInputs>
 
     <div class="hints">
