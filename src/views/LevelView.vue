@@ -1,14 +1,8 @@
 <script setup lang="ts">
-import { IonButton, IonIcon } from "@ionic/vue";
 import { computed, ref, watch } from "vue";
 import { useData } from "@/services/fetchApi";
 import { Letter } from "@/utils/Letter";
-import {
-  playForwardOutline,
-  desktopOutline,
-  trashBinOutline,
-  eyeOutline,
-} from "ionicons/icons";
+
 import MainLayout from "@/layouts/MainLayout.vue";
 import UserInputs from "@/components/LevelView/UserInputs.vue";
 
@@ -44,7 +38,7 @@ watch(
   currentLevelIndex,
   () => {
     const word = actualAnswer.value.replaceAll(/[а-яА-Я]/g, "_");
-    const letters = Letter.toLetters(word);
+    const letters = Letter.toLetters(word).map(letter => new Letter(letter.character, -1, letter.state));
     if (opened.value != null && opened.value instanceof Array) {
       letters.forEach((letter, index) => {
         if (opened.value.includes(index)) {
@@ -92,25 +86,6 @@ function onLetterPickerStateChanged(index: number, state: boolean) {
       :letter-picker-collection="letterPickerCollection"
       @update:letter-picker-state="onLetterPickerStateChanged"
     ></UserInputs>
-
-    <div class="hints">
-      <ion-button fill="outline" color="tertiary">
-        <ion-icon size="large" slot="start" :icon="eyeOutline"></ion-icon>
-        <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
-      </ion-button>
-      <ion-button fill="outline" color="tertiary">
-        <ion-icon size="large" slot="start" :icon="trashBinOutline"></ion-icon>
-        <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon
-      ></ion-button>
-      <ion-button fill="outline" color="tertiary">
-        <ion-icon
-          size="large"
-          slot="start"
-          :icon="playForwardOutline"
-        ></ion-icon>
-        <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
-      </ion-button>
-    </div>
   </main-layout>
 </template>
 
@@ -134,13 +109,6 @@ function onLetterPickerStateChanged(index: number, state: boolean) {
   height: 50%;
   width: 100%;
   object-fit: cover;
-}
-
-.hints {
-  display: flex;
-  justify-content: space-between;
-  height: 7%;
-  padding: 0 5px;
 }
 
 ion-button {

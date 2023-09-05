@@ -51,7 +51,7 @@ import { diamondOutline } from "ionicons/icons";
             sizeMd="8"
             sizeLg="6"
             sizeXl="4"
-            style="height: 100%"
+            style="display: flex; flex-direction: column; height: 100%"
           >
             <slot />
           </ion-col>
