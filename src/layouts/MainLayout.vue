@@ -13,12 +13,13 @@ import {
   IonRow,
   IonCol,
 } from "@ionic/vue";
-import { computed } from "vue";
-import { useStore } from "vuex";
-const store = useStore();
-const diamonds = computed(() => store.state.diamonds);
-const currentLevelIndex = computed(() => store.state.currentLevelIndex);
 import { diamondOutline } from "ionicons/icons";
+
+import { useDiamondsStore } from "@/stores/diamonds";
+import { useLevelsStore } from "@/stores/levels";
+
+const diamondsStore = useDiamondsStore();
+const levelsStore = useLevelsStore();
 </script>
 
 <template>
@@ -31,10 +32,10 @@ import { diamondOutline } from "ionicons/icons";
         </ion-buttons>
         <ion-buttons slot="end">
           <ion-button routerLink="/levels"
-            >Уровень: {{ currentLevelIndex + 1 }}</ion-button
+            >Уровень: {{ levelsStore.currentLevelIndex + 1 }}</ion-button
           >
           <ion-button routerLink="/diamond"
-            >{{ diamonds }}
+            >{{ diamondsStore.diamonds }}
             <ion-icon slot="end" :icon="diamondOutline" />
           </ion-button>
         </ion-buttons>

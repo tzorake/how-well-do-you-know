@@ -1,27 +1,28 @@
 <script setup lang="ts">
+/* Helpers */
+import { computed, ref } from "vue";
+import { storeToRefs } from "pinia";
+import { useLevelsStore } from "@/stores/levels";
+import { useIonRouter } from "@ionic/vue";
+import { LevelListItemState } from "@/utils/LevelListItemState";
+
+/* Components */
+import { IonAlert, IonGrid, IonRow, IonCol } from "@ionic/vue";
 import BackLayout from "@/layouts/BackLayout.vue";
 import LevelListItem from "@/components/LevelListView/LevelListItem.vue";
-import { computed, ref } from "vue";
-import { useStore } from "vuex";
-import { LevelListItemState } from "@/utils/LevelListItemState";
-import { useIonRouter } from "@ionic/vue";
-import { useData } from "@/services/fetchApi";
-import { IonAlert, IonGrid, IonRow, IonCol } from "@ionic/vue";
 
-const data = await useData("/levels/levels.json");
-const levels = data.levels;
-const store = useStore();
 const ionRouter = useIonRouter();
-const lastAvailableLevelIndex = computed(
-  () => store.state.lastAvailableLevelIndex
-);
+
+const levelsStore = useLevelsStore();
+const { levelsInfo, lastAvailableLevelIndex } = storeToRefs(levelsStore);
+const { setLastAvailableLevelIndex, setCurrentLevelIndex } = levelsStore;
+
+const levels = levelsInfo.value.levels;
 const isOpenFinishAlert = ref(lastAvailableLevelIndex.value === levels.length);
+
 const setOpenFinishAlert = async (state: boolean) => {
   if (state === false) {
-    await store.dispatch(
-      "setLastAvailableLevelIndex",
-      lastAvailableLevelIndex.value + 1
-    );
+    setLastAvailableLevelIndex(lastAvailableLevelIndex.value + 1);
   }
 
   isOpenFinishAlert.value = state;
@@ -42,7 +43,7 @@ const itemState = (index: number) => {
 
 async function onItemClicked(index: number) {
   if (itemState(index) !== LevelListItemState.LOCKED) {
-    await store.dispatch("setCurrentLevelIndex", index);
+    setCurrentLevelIndex(index);
     ionRouter.navigate("/level-view/", "back", "pop");
   }
 }
@@ -52,17 +53,6 @@ async function onItemClicked(index: number) {
   <back-layout title="Уровни">
     <ion-grid>
       <ion-row>
-        <!-- uncommit to get mocking data -->
-        <!-- <ion-col
-          size="3"
-          sizeSm="3"
-          sizeMd="2"
-          sizeLg="1"
-          sizeXl="1"
-          v-for="(item, index) in Array(90)
-            .fill(0)
-            .map((_) => Math.floor(Math.random() * 2))"
-        > -->
         <ion-col
           size="3"
           sizeSm="3"
@@ -92,19 +82,7 @@ async function onItemClicked(index: number) {
 </template>
 
 <style scoped>
-.container-wrapper {
-  background-color: var(--ion-color-primary-shade);
-
-  min-height: 100%;
-}
-
-.container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.75rem;
-  padding: 0.75rem;
-
-  max-width: 576px;
-  flex-grow: 0;
+ion-grid {
+  --ion-grid-padding: 8px;
 }
 </style>

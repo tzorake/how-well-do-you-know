@@ -22,9 +22,9 @@
     "@ionic/vue": "^7.0.0",
     "@ionic/vue-router": "^7.0.0",
     "ionicons": "^7.0.0",
+    "pinia": "^2.1.7",
     "vue": "^3.2.45",
-    "vue-router": "^4.1.6",
-    "vuex": "^4.0.2"
+    "vue-router": "^4.1.6"
   },
   "devDependencies": {
     "@capacitor/cli": "5.2.3",

@@ -1,25 +1,27 @@
 <script setup lang="ts">
+import { useDiamondsStore } from "@/stores/diamonds";
+
+/* Components */
 import BackLayout from "@/layouts/BackLayout.vue";
 import { IonButton, IonIcon } from "@ionic/vue";
 import { diamondOutline } from "ionicons/icons";
 
-import { useStore } from "vuex";
-const store = useStore();
+const { setDiamonds, diamonds } = useDiamondsStore();
 
 const onClickWatchVideo = async () => {
-  await store.dispatch("addDiamonds", 500);
+  setDiamonds(diamonds + 500);
 };
 
 const onClickShareVK = async () => {
-  await store.dispatch("addDiamonds", 1000);
+  setDiamonds(diamonds + 1000);
 };
 
 const onClickShareOK = async () => {
-  await store.dispatch("addDiamonds", 1000);
+  setDiamonds(diamonds + 1000);
 };
 
 const onClickWatchTelegram = async () => {
-  await store.dispatch("addDiamonds", 1000);
+  setDiamonds(diamonds + 1000);
 };
 </script>
 

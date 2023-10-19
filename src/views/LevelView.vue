@@ -1,28 +1,29 @@
 <script setup lang="ts">
+/* Helpers */
 import { computed, ref, watch } from "vue";
-import { useData } from "@/services/fetchApi";
+import { storeToRefs } from "pinia";
 import { Letter } from "@/utils/Letter";
-
-import MainLayout from "@/layouts/MainLayout.vue";
-import UserInputs from "@/components/LevelView/UserInputs.vue";
-
-import { useStore } from "vuex";
-const store = useStore();
-
 import { useIonRouter } from "@ionic/vue";
 import { LetterPickerCollection } from "@/utils/LetterPickerCollection";
 import { LetterState } from "@/utils/LetterState";
+import { useLevelsStore } from "@/stores/levels";
+
+/* Components */
+import MainLayout from "@/layouts/MainLayout.vue";
+import UserInputs from "@/components/LevelView/UserInputs.vue";
+
 const ionRouter = useIonRouter();
 
-const data = await useData("/levels/levels.json");
-const levels = data.levels;
-const currentLevelIndex = computed(() => store.state.currentLevelIndex);
-const levelTitle = computed(() => data.title);
-const imageSrc = computed(() => levels[currentLevelIndex.value].image);
+const levelsStore = useLevelsStore();
+const { levelsInfo, currentLevelIndex } = storeToRefs(levelsStore);
+
+const levels = computed(() => levelsInfo.value.levels);
+const levelTitle = computed(() => levelsInfo.value.title);
+const imageSrc = computed(() => levels.value[currentLevelIndex.value].image);
 const actualAnswer = computed(() =>
-  levels[currentLevelIndex.value].actual_answer.toLowerCase()
+  levels.value[currentLevelIndex.value].actual_answer.toLowerCase()
 );
-const opened = computed(() => levels[currentLevelIndex.value].opened);
+const opened = computed(() => levels.value[currentLevelIndex.value].opened);
 const userAnswer = ref<Letter[]>([]);
 const letterPickerCollection = computed(
   () => new LetterPickerCollection(actualAnswer.value, opened.value)
@@ -38,7 +39,9 @@ watch(
   currentLevelIndex,
   () => {
     const word = actualAnswer.value.replaceAll(/[а-яА-Я]/g, "_");
-    const letters = Letter.toLetters(word).map(letter => new Letter(letter.character, -1, letter.state));
+    const letters = Letter.toLetters(word).map(
+      (letter) => new Letter(letter.character, -1, letter.state)
+    );
     if (opened.value != null && opened.value instanceof Array) {
       letters.forEach((letter, index) => {
         if (opened.value.includes(index)) {

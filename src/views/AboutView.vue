@@ -1,4 +1,5 @@
 <script setup lang="ts">
+/* Components */
 import BackLayout from "@/layouts/BackLayout.vue";
 </script>
 

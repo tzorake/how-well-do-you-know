@@ -1,8 +1,11 @@
 import { createApp } from "vue";
-import App from "./App.vue";
-import router from "./router";
-import store from "./store/index";
+import { createPinia } from 'pinia'
 
+import App from "./App.vue";
+
+import router from "./router";
+
+const pinia = createPinia()
 import { IonicVue } from "@ionic/vue";
 
 /* Normalize CSS */
@@ -32,7 +35,7 @@ const app = createApp(App)
     mode: "md",
   })
   .use(router)
-  .use(store);
+  .use(pinia);
 
 router.isReady().then(() => {
   app.mount("#app");

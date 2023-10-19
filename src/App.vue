@@ -1,3 +1,50 @@
+<script setup lang="ts">
+import { onBeforeMount, ref } from "vue";
+import { useLevelsStore } from "@/stores/levels";
+import { useDiamondsStore } from "@/stores/diamonds";
+
+/* Helpers */
+import { StatusBar } from "@capacitor/status-bar";
+
+/* Components */
+import {
+  IonApp,
+  IonContent,
+  IonRouterOutlet,
+  IonHeader,
+  IonToolbar,
+  IonMenu,
+  IonTitle,
+  IonMenuToggle,
+  IonItem,
+} from "@ionic/vue";
+
+const { fetchCurrentLevelIndex, fetchLastAvailableLevelIndex, fetchLevels } =
+  useLevelsStore();
+
+const { fetchDiamonds } = useDiamondsStore();
+
+const paths = [
+  { name: "Об игре", url: "/about" },
+  { name: "Алмазы", url: "/diamond" },
+  { name: "Уровни", url: "/levels" },
+];
+
+const initialized = ref(false);
+onBeforeMount(async () => {
+  await fetchLevels();
+  await fetchCurrentLevelIndex();
+  await fetchLastAvailableLevelIndex();
+  await fetchDiamonds();
+
+  await StatusBar.setBackgroundColor({
+    color: "#148485",
+  }).catch(() => {});
+
+  initialized.value = true;
+});
+</script>
+
 <template>
   <ion-app v-if="initialized">
     <ion-menu content-id="main-content">
@@ -21,41 +68,3 @@
     </ion-content>
   </ion-app>
 </template>
-
-<script setup lang="ts">
-import { StatusBar } from "@capacitor/status-bar";
-import {
-  IonApp,
-  IonContent,
-  IonRouterOutlet,
-  IonHeader,
-  IonToolbar,
-  IonMenu,
-  IonTitle,
-  IonMenuToggle,
-  IonItem,
-} from "@ionic/vue";
-import { useStore } from "vuex";
-import { onBeforeMount, ref } from "vue";
-const store = useStore();
-const paths = [
-  { name: "Об игре", url: "/about" },
-  { name: "Алмазы", url: "/diamond" },
-  { name: "Уровни", url: "/levels" },
-];
-const fetchCurrentLevelIndex = () => store.dispatch("fetchCurrentLevelIndex");
-const fetchLastAvailableLevelIndex = () =>
-  store.dispatch("fetchLastAvailableLevelIndex");
-const fetchDiamonds = () => store.dispatch("fetchDiamonds");
-
-const initialized = ref(false);
-onBeforeMount(async () => {
-  await fetchCurrentLevelIndex();
-  await fetchLastAvailableLevelIndex();
-  await fetchDiamonds();
-  await StatusBar.setBackgroundColor({
-    color: "#148485",
-  }).catch(() => {});
-  initialized.value = true;
-});
-</script>

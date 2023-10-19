@@ -1,42 +1,44 @@
 <script setup lang="ts">
-import { useData } from "@/services/fetchApi";
-import { IonButton, IonIcon, IonLabel } from "@ionic/vue";
+/* Helpers */
 import { computed } from "vue";
-import { diamondOutline, happyOutline, sadOutline } from "ionicons/icons";
-import MainLayout from "@/layouts/MainLayout.vue";
-
-import { useStore } from "vuex";
-const store = useStore();
-
+import { useLevelsStore } from "@/stores/levels";
 import { useIonRouter } from "@ionic/vue";
+import { storeToRefs } from "pinia";
+
+/* Components */
+import { IonButton, IonIcon, IonLabel } from "@ionic/vue";
+import MainLayout from "@/layouts/MainLayout.vue";
+import { diamondOutline, happyOutline, sadOutline } from "ionicons/icons";
+
+const levelsStore = useLevelsStore();
+const { levelsInfo, currentLevelIndex, lastAvailableLevelIndex } =
+  storeToRefs(levelsStore);
+const { setCurrentLevelIndex, setLastAvailableLevelIndex } = levelsStore;
+
 const ionRouter = useIonRouter();
 
-const currentLevelIndex = computed(() => store.state.currentLevelIndex);
-const lastAvailableLevelIndex = computed(
-  () => store.state.lastAvailableLevelIndex
-);
-const data = await useData("/levels/levels.json");
-const levels = data.levels;
+const levels = computed(() => levelsInfo.value.levels);
+
 const imageSrc = computed(() => {
-  return levels[currentLevelIndex.value].image;
+  return levels.value[currentLevelIndex.value].image;
 });
 const actualAnswer = computed(
-  () => levels[currentLevelIndex.value].actual_answer
+  () => levels.value[currentLevelIndex.value].actual_answer
 );
 
 async function onContinue() {
   const newLevelIndex = currentLevelIndex.value + 1;
 
   if (currentLevelIndex.value === lastAvailableLevelIndex.value) {
-    await store.dispatch("setLastAvailableLevelIndex", newLevelIndex);
+    await setCurrentLevelIndex(newLevelIndex);
   }
 
-  if (newLevelIndex === levels.length) {
+  if (newLevelIndex === levels.value.length) {
     ionRouter.navigate("/levels/", "forward", "push");
     return;
   }
 
-  await store.dispatch("setCurrentLevelIndex", newLevelIndex);
+  await setLastAvailableLevelIndex(newLevelIndex);
 
   ionRouter.navigate("/level-view/", "back", "pop");
 }
