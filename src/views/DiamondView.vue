@@ -1,27 +1,30 @@
 <script setup lang="ts">
 import { useDiamondsStore } from "@/stores/diamonds";
+import { storeToRefs } from "pinia";
 
 /* Components */
 import BackLayout from "@/layouts/BackLayout.vue";
 import { IonButton, IonIcon } from "@ionic/vue";
 import { diamondOutline } from "ionicons/icons";
 
-const { setDiamonds, diamonds } = useDiamondsStore();
+const diamondsStore = useDiamondsStore();
+const { diamonds } = storeToRefs(diamondsStore);
+const { setDiamonds } = diamondsStore;
 
 const onClickWatchVideo = async () => {
-  setDiamonds(diamonds + 500);
+  setDiamonds(diamonds.value + 500);
 };
 
 const onClickShareVK = async () => {
-  setDiamonds(diamonds + 1000);
+  setDiamonds(diamonds.value + 1000);
 };
 
 const onClickShareOK = async () => {
-  setDiamonds(diamonds + 1000);
+  setDiamonds(diamonds.value + 1000);
 };
 
 const onClickWatchTelegram = async () => {
-  setDiamonds(diamonds + 1000);
+  setDiamonds(diamonds.value + 1000);
 };
 </script>
 

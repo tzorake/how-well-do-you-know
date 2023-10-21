@@ -28,19 +28,16 @@ const actualAnswer = computed(
 
 async function onContinue() {
   const newLevelIndex = currentLevelIndex.value + 1;
-
-  if (currentLevelIndex.value === lastAvailableLevelIndex.value) {
-    await setCurrentLevelIndex(newLevelIndex);
+  if (lastAvailableLevelIndex.value < newLevelIndex) {
+    await setLastAvailableLevelIndex(newLevelIndex);
   }
-
   if (newLevelIndex === levels.value.length) {
     ionRouter.navigate("/levels/", "forward", "push");
     return;
+  } else {
+    await setCurrentLevelIndex(newLevelIndex);
+    ionRouter.navigate("/level-view/", "back", "pop");
   }
-
-  await setLastAvailableLevelIndex(newLevelIndex);
-
-  ionRouter.navigate("/level-view/", "back", "pop");
 }
 </script>
 

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
-import { IonButton, IonIcon } from "@ionic/vue";
+import { AlertButton, IonButton, IonIcon, alertController } from "@ionic/vue";
 import {
   playForwardOutline,
   desktopOutline,
@@ -11,6 +11,9 @@ import AppLetter from "@/components/LevelView/AppLetter.vue";
 import { Letter } from "@/utils/Letter";
 import { LetterState } from "@/utils/LetterState";
 import { LetterPickerCollection } from "@/utils/LetterPickerCollection";
+import { useDiamondsStore } from "@/stores/diamonds";
+
+const diamondsStore = useDiamondsStore();
 
 const props = defineProps({
   userAnswer: {
@@ -178,6 +181,64 @@ function onCompleteLevelHint() {
     emit("update:letter", index, new Letter(character, entry.idx, LetterState.BLOCKED));
   });
 }
+
+async function onClickHint(
+  mode: "showLetter" | "onlyRequired" | "completeLevel"
+) {
+  let currentHint: Function;
+  let price: number;
+  let header: string;
+  const buttons: AlertButton[] = [
+    {
+      text: "Смотреть",
+      cssClass: ["watch-button", "alert-custom"],
+      handler: () => {
+        console.log("Запуск видео");
+        if (currentHint) {
+          currentHint();
+        }
+      },
+    },
+  ];
+  switch (mode) {
+    case "showLetter":
+      currentHint = onShowLetterHint;
+      header = "Показать букву";
+      price = 300;
+      break;
+    case "onlyRequired":
+      currentHint = onShowRequiredLettersHint;
+      header = "Убрать лишние";
+      price = 700;
+      break;
+    case "completeLevel":
+      currentHint = onCompleteLevelHint;
+      header = "Пройти уровень";
+      price = 1500;
+      break;
+  }
+
+  if (diamondsStore.diamonds >= price) {
+    buttons.push({
+      text: "Купить",
+      handler: () => {
+        diamondsStore.setDiamonds(diamondsStore.diamonds - price);
+        if (currentHint) {
+          currentHint();
+        }
+      },
+    });
+  }
+
+  const alert = await alertController.create({
+    header,
+    subHeader: `Стоимость ${price} алмазов`,
+    message: "Вы можете посмотреть рекламу или потратить ваши алмазы",
+    buttons,
+  });
+
+  await alert.present();
+}
 </script>
 
 <template>
@@ -232,7 +293,7 @@ function onCompleteLevelHint() {
   <div class="hints">
     <div class="hints-container">
       <!-- SHOW A LETTER -->
-      <ion-button fill="outline" color="tertiary" @click="onShowLetterHint">
+      <ion-button fill="outline" color="tertiary" @click="onClickHint('showLetter')">
         <ion-icon size="large" slot="start" :icon="eyeOutline"></ion-icon>
         <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon>
       </ion-button>
@@ -241,14 +302,14 @@ function onCompleteLevelHint() {
       <ion-button
         fill="outline"
         color="tertiary"
-        @click="onShowRequiredLettersHint"
+        @click="onClickHint('onlyRequired')"
       >
         <ion-icon size="large" slot="start" :icon="trashBinOutline"></ion-icon>
         <ion-icon size="large" slot="end" :icon="desktopOutline"></ion-icon
       ></ion-button>
 
       <!-- COMPLETE LEVEL -->
-      <ion-button fill="outline" color="tertiary" @click="onCompleteLevelHint">
+      <ion-button fill="outline" color="tertiary" @click="onClickHint('completeLevel')">
         <ion-icon
           size="large"
           slot="start"

@@ -170,3 +170,7 @@ body {
 
   --ion-card-background: #1e1e1e;
 }
+
+.watch-button.alert-custom {
+  color: var(--ion-color-success);
+}

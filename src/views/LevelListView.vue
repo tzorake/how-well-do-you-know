@@ -1,6 +1,6 @@
 <script setup lang="ts">
 /* Helpers */
-import { computed, ref } from "vue";
+import { ref } from "vue";
 import { storeToRefs } from "pinia";
 import { useLevelsStore } from "@/stores/levels";
 import { useIonRouter } from "@ionic/vue";
@@ -83,6 +83,6 @@ async function onItemClicked(index: number) {
 
 <style scoped>
 ion-grid {
-  --ion-grid-padding: 8px;
+  --ion-grid-padding: 10px;
 }
 </style>

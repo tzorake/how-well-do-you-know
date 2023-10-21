@@ -7,6 +7,7 @@ import { useIonRouter } from "@ionic/vue";
 import { LetterPickerCollection } from "@/utils/LetterPickerCollection";
 import { LetterState } from "@/utils/LetterState";
 import { useLevelsStore } from "@/stores/levels";
+import { useDiamondsStore } from "@/stores/diamonds";
 
 /* Components */
 import MainLayout from "@/layouts/MainLayout.vue";
@@ -14,6 +15,7 @@ import UserInputs from "@/components/LevelView/UserInputs.vue";
 
 const ionRouter = useIonRouter();
 
+const diamondsStore = useDiamondsStore();
 const levelsStore = useLevelsStore();
 const { levelsInfo, currentLevelIndex } = storeToRefs(levelsStore);
 
@@ -61,6 +63,7 @@ const isLevelFinished = computed(
 
 watch(isLevelFinished, (newValue) => {
   if (newValue) {
+    diamondsStore.setDiamonds(diamondsStore.diamonds + 100);
     ionRouter.navigate("/next-level/", "forward", "push");
   }
 });

@@ -55,6 +55,7 @@ const props = defineProps({
 .level-icon {
   position: relative;
   user-select: none;
+  cursor: pointer;
 }
 
 .text {
