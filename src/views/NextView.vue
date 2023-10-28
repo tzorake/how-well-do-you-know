@@ -32,11 +32,11 @@ async function onContinue() {
     await setLastAvailableLevelIndex(newLevelIndex);
   }
   if (newLevelIndex === levels.value.length) {
-    ionRouter.navigate("/levels/", "forward", "push");
+    ionRouter.navigate("/levels/", "none", "replace");
     return;
   } else {
     await setCurrentLevelIndex(newLevelIndex);
-    ionRouter.navigate("/level-view/", "back", "pop");
+    ionRouter.navigate("/level-view/", "none", "replace");
   }
 }
 </script>
@@ -48,7 +48,7 @@ async function onContinue() {
     </div>
     <img class="level-image" alt="level-image" :src="imageSrc" />
 
-    <div class="level-answer">
+    <div class="level-answer" v-once>
       {{ actualAnswer }}
       <ion-label class="reward">
         <span>+100</span>
@@ -65,7 +65,7 @@ async function onContinue() {
         >Отлично
         <ion-icon slot="end" :icon="happyOutline" />
       </ion-button>
-      <ion-button @click="onContinue" class="continue-button" color="secondary"
+      <ion-button @click="onContinue" class="continue-button" color="primary"
         >Продолжить
       </ion-button>
     </div>
@@ -101,15 +101,15 @@ async function onContinue() {
 }
 
 .buttons {
-  height: 20%;
+  height: 17%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;
   grid-template-areas:
     "boring-button fun-button"
     "continue-button continue-button";
-  padding: 1rem;
-  gap: 0.5rem;
+  margin: 0 8px;
+  gap: 10px;
 }
 
 .reward {

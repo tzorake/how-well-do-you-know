@@ -91,7 +91,8 @@ function onLetterPickerStateChanged(index: number, state: boolean) {
       @update:letter="onLetterChanged"
       :letter-picker-collection="letterPickerCollection"
       @update:letter-picker-state="onLetterPickerStateChanged"
-    ></UserInputs>
+    >
+    </UserInputs>
   </main-layout>
 </template>
 
@@ -112,7 +113,7 @@ function onLetterPickerStateChanged(index: number, state: boolean) {
 }
 
 .level-image {
-  height: 50%;
+  height: 45%;
   width: 100%;
   object-fit: cover;
 }

@@ -22,7 +22,7 @@ const props = defineProps({
     <div class="cover">
       <img
         class="image"
-        alt=""
+        alt="level-img"
         :src="props.imageSrc"
         v-if="props.state !== LevelListItemState.LOCKED"
       />
@@ -44,9 +44,9 @@ const props = defineProps({
       v-if="props.state === LevelListItemState.COMPLETED"
     ></ion-icon>
     <ion-icon
-      class="lock"
-      :icon="lockClosedOutline"
-      v-if="props.state === LevelListItemState.LOCKED"
+    class="lock"
+    :icon="lockClosedOutline"
+    v-if="props.state === LevelListItemState.LOCKED"
     ></ion-icon>
   </div>
 </template>
