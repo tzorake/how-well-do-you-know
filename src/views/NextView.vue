@@ -101,7 +101,7 @@ async function onContinue() {
 }
 
 .buttons {
-  height: 17%;
+  height: 15%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr 1fr;

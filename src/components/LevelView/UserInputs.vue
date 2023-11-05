@@ -173,6 +173,7 @@ function onShowRequiredLettersHint() {
   const aaws = lpc.actualAnswerWithoutSpaces;
   const ml = mixedLetters.value;
 
+  console.log(ml);
   ml.split("").forEach((character, index) => {
     if (!aaws.includes(character)) {
       const entry = ua
@@ -189,8 +190,10 @@ function onShowRequiredLettersHint() {
     }
   });
 
-  ua.forEach((_, index) => {
-    emit("update:letter", index, new Letter("_", -1));
+  ua.forEach((letter, index) => {
+    if (letter.state !== LetterState.BLOCKED) {
+      emit("update:letter", index, new Letter("_", -1));
+    }
   });
 }
 
