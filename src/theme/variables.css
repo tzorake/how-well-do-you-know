@@ -93,21 +93,21 @@
   --ion-color-tertiary-shade: #a223a7;
   --ion-color-tertiary-tint: #bf3ec5;
 
-  --ion-color-success: #88d44e;
+  --ion-color-success: #7fc54a;
   --ion-color-success-rgb: 136, 212, 78;
   --ion-color-success-contrast: #000000;
   --ion-color-success-contrast-rgb: 0, 0, 0;
   --ion-color-success-shade: #78bb45;
   --ion-color-success-tint: #94d860;
 
-  --ion-color-warning: #ff7f00;
+  --ion-color-warning: #e97400;
   --ion-color-warning-rgb: 255, 127, 0;
   --ion-color-warning-contrast: #000000;
   --ion-color-warning-contrast-rgb: 0, 0, 0;
   --ion-color-warning-shade: #a75300;
   --ion-color-warning-tint: #ff8c1a;
 
-  --ion-color-danger: #eb445a;
+  --ion-color-danger: #d33e52;
   --ion-color-danger-rgb: 235, 68, 90;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
@@ -121,7 +121,7 @@
   --ion-color-medium-shade: #808289;
   --ion-color-medium-tint: #9d9fa6;
 
-  --ion-color-light: #f4f5f8;
+  --ion-color-light: #e7e6e6;
   --ion-color-light-rgb: 244, 245, 248;
   --ion-color-light-contrast: #000000;
   --ion-color-light-contrast-rgb: 0, 0, 0;
@@ -171,11 +171,24 @@ body {
   --ion-card-background: #1e1e1e;
 }
 
-.watch-button.app-alert {
-  color: var(--ion-color-success);
+.watch-button {
+  color: var(--ion-color-success) !important;
 }
 
-.app-alert-body {
+.app-alert {
   --width: 100%;
   --max-width: 700px;
+}
+
+ion-toast.app-toast {
+  --background: var(--ion-color-secondary);
+  --box-shadow: 3px 3px 10px 0 rgba(0, 0, 0, 0.2);
+  --color: var(--ion-color-step-900);
+  opacity: 0.9;
+}
+
+ion-toast.app-toast::part(message) {
+  font-size: 1.08rem;
+  font-weight: 500;
+  text-align: center;
 }

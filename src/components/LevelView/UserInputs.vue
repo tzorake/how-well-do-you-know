@@ -6,6 +6,7 @@ import {
   languageOutline,
   playForwardCircleOutline,
 } from "ionicons/icons";
+import { showToast } from "@/helpers/toast";
 import AppLetter from "@/components/LevelView/AppLetter.vue";
 import { Letter } from "@/utils/Letter";
 import { LetterState } from "@/utils/LetterState";
@@ -260,18 +261,6 @@ async function onClickHint(
   let currentHint: Function;
   let price: number;
   let header: string;
-  const buttons: AlertButton[] = [
-    {
-      text: "Смотреть",
-      cssClass: ["watch-button", "app-alert"],
-      handler: () => {
-        console.log("Запуск видео");
-        if (currentHint) {
-          currentHint();
-        }
-      },
-    },
-  ];
   switch (mode) {
     case "showLetter":
       currentHint = onShowLetterHint;
@@ -290,6 +279,22 @@ async function onClickHint(
       break;
   }
 
+  const buttons: AlertButton[] = [
+    {
+      text: "Смотреть",
+      cssClass: "watch-button",
+      handler: () => {
+        console.log("Запуск видео");
+        if (currentHint) {
+          currentHint();
+        }
+        if (["showLetter", "onlyRequired"].includes(mode)) {
+          showToast(`Вы получили подсказку: "${header}"`);
+        }
+      },
+    },
+  ];
+
   if (diamondsStore.diamonds >= price) {
     buttons.push({
       text: "Купить",
@@ -298,15 +303,19 @@ async function onClickHint(
         if (currentHint) {
           currentHint();
         }
+        if (["showLetter", "onlyRequired"].includes(mode)) {
+          showToast(`Вы купили подсказку: "${header}"`);
+        }
       },
     });
   }
 
   const alert = await alertController.create({
-    cssClass: "app-alert-body",
+    cssClass: "app-alert",
     header,
     subHeader: `Стоимость ${price} алмазов`,
-    message: "Вы можете посмотреть рекламу или потратить ваши алмазы",
+    message:
+      "У вас есть два варианта: либо просмотреть рекламный ролик, либо использовать ваши алмазы.",
     buttons,
   });
 
@@ -411,7 +420,7 @@ const isShownRequiredLetters = ref<boolean>(false);
       <ion-button
         class="hints__button"
         fill="solid"
-        color="primary"
+        color="success"
         @click="onClickHint('completeLevel')"
       >
         Пройти
