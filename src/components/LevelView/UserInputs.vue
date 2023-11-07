@@ -1,20 +1,17 @@
 <script setup lang="ts">
 import { computed, ref, watch } from "vue";
 import { AlertButton, IonButton, IonIcon, alertController } from "@ionic/vue";
-import {
-  trashOutline,
-  languageOutline,
-  playForwardCircleOutline,
-} from "ionicons/icons";
+import { trashOutline, playForwardCircleOutline } from "ionicons/icons";
 import AppLetter from "@/components/LevelView/AppLetter.vue";
 import { Letter } from "@/utils/Letter";
 import { LetterState } from "@/utils/LetterState";
 import { LetterPickerCollection } from "@/utils/LetterPickerCollection";
 import { useDiamondsStore } from "@/stores/diamonds";
-import { useLevelsStore } from "@/stores/levels";
+import { useIonRouter } from "@ionic/vue";
 
 const diamondsStore = useDiamondsStore();
-const levelsStore = useLevelsStore();
+
+const ionRouter = useIonRouter();
 
 const props = defineProps({
   userAnswer: {
@@ -40,10 +37,6 @@ const rowLength = ref<number>(9);
 
 const actualAnswerWords = computed(() => {
   return props.letterPickerCollection.actualAnswerWords;
-});
-
-const actualAnswerWithoutSpaces = computed(() => {
-  return props.letterPickerCollection.actualAnswerWithoutSpaces;
 });
 
 const mixedLetters = computed(() => {
@@ -197,57 +190,60 @@ function onShowRequiredLettersHint() {
 }
 
 function onCompleteLevelHint() {
-  const ua = props.userAnswer;
-  const lpc = props.letterPickerCollection;
-  const aaws = lpc.actualAnswerWithoutSpaces;
-  const ml = mixedLetters.value;
+  diamondsStore.setDiamonds(diamondsStore.diamonds + 100);
+  ionRouter.navigate("/next-level/", "forward", "push");
 
-  aaws.split("").forEach((character, index) => {
-    if (ua[index].character !== "_") {
-      emit("update:letter-picker-state", ua[index].index, false);
-    }
+  // const ua = props.userAnswer;
+  // const lpc = props.letterPickerCollection;
+  // const aaws = lpc.actualAnswerWithoutSpaces;
+  // const ml = mixedLetters.value;
 
-    const entries = ml
-      .split("")
-      .map((ch, idx) => ({ ch, idx }))
-      .filter(
-        ({ ch, idx }) =>
-          ch === character &&
-          !ua.find(
-            (letter) =>
-              letter.character === ch &&
-              letter.index === idx &&
-              letter.state === LetterState.BLOCKED
-          )
-      );
+  // aaws.split("").forEach((character, index) => {
+  //   if (ua[index].character !== "_") {
+  //     emit("update:letter-picker-state", ua[index].index, false);
+  //   }
 
-    const entry = entries.find(
-      ({ ch, idx }) =>
-        !ua.find(
-          (letter, index) =>
-            letter.index === idx && letter.state === LetterState.BLOCKED
-        )
-    );
-    if (entry == null) return;
+  //   const entries = ml
+  //     .split("")
+  //     .map((ch, idx) => ({ ch, idx }))
+  //     .filter(
+  //       ({ ch, idx }) =>
+  //         ch === character &&
+  //         !ua.find(
+  //           (letter) =>
+  //             letter.character === ch &&
+  //             letter.index === idx &&
+  //             letter.state === LetterState.BLOCKED
+  //         )
+  //     );
 
-    const letter = ua.find(
-      (letter) => letter.character === entry.ch && letter.index === entry.idx
-    );
-    const letterIndex = ua.findIndex(
-      (letter) => letter.character === entry.ch && letter.index === entry.idx
-    );
-    if (letter != null) {
-      emit("update:letter-picker-state", ua[letterIndex].index, false);
-      emit("update:letter", letterIndex, new Letter("_", letter.index));
-    }
+  //   const entry = entries.find(
+  //     ({ ch, idx }) =>
+  //       !ua.find(
+  //         (letter, index) =>
+  //           letter.index === idx && letter.state === LetterState.BLOCKED
+  //       )
+  //   );
+  //   if (entry == null) return;
 
-    emit("update:letter-picker-state", entry.idx, true);
-    emit(
-      "update:letter",
-      index,
-      new Letter(character, entry.idx, LetterState.BLOCKED)
-    );
-  });
+  //   const letter = ua.find(
+  //     (letter) => letter.character === entry.ch && letter.index === entry.idx
+  //   );
+  //   const letterIndex = ua.findIndex(
+  //     (letter) => letter.character === entry.ch && letter.index === entry.idx
+  //   );
+  //   if (letter != null) {
+  //     emit("update:letter-picker-state", ua[letterIndex].index, false);
+  //     emit("update:letter", letterIndex, new Letter("_", letter.index));
+  //   }
+
+  //   emit("update:letter-picker-state", entry.idx, true);
+  //   emit(
+  //     "update:letter",
+  //     index,
+  //     new Letter(character, entry.idx, LetterState.BLOCKED)
+  //   );
+  // });
 }
 
 /**
@@ -447,29 +443,90 @@ const isShownRequiredLetters = ref<boolean>(false);
 }
 
 .letter-placeholder {
+  position: relative;
   width: 2rem;
   height: 2rem;
   display: flex;
   justify-content: center;
   align-items: center;
   user-select: none;
-  border-bottom: 3px solid var(--ion-color-step-250);
   font-weight: 600;
   text-transform: uppercase;
   font-size: 0;
   cursor: pointer;
-  transition: all 0.1s linear;
+  transition: all 0.13s ease-out;
+  animation-duration: 2s;
+  animation-name: appearance-placeholder;
+}
+
+@keyframes appearance-placeholder {
+  from {
+    width: 0;
+    margin: 0 16px;
+  }
+
+  to {
+    width: 32px;
+    margin: 0;
+  }
+}
+
+.letter-placeholder::after {
+  position: absolute;
+  border-bottom: 3px solid var(--ion-color-step-250);
+  width: 100%;
+  bottom: 0;
+  content: "";
 }
 
 .inplace-letter {
-  border-bottom: 3px solid var(--ion-color-primary);
   font-size: 1rem;
 }
 
+.inplace-letter::after {
+  position: absolute;
+  border-bottom: 3px solid var(--ion-color-primary);
+  width: 100%;
+  bottom: 0;
+  content: "";
+}
+
 .blocked-letter {
-  color: var(--ion-color-warning);
-  border-bottom: 3px solid var(--ion-color-warning);
   font-size: 1rem;
+  color: var(--ion-color-warning);
+  animation-duration: 0.7s;
+  animation-name: appearance-blocked-letter;
+}
+
+@keyframes appearance-blocked-letter {
+  from {
+    font-size: 3rem;
+  }
+
+  to {
+    font-size: 1rem;
+  }
+}
+
+.blocked-letter::after {
+  position: absolute;
+  border-bottom: 3px solid var(--ion-color-warning);
+  width: 100%;
+  bottom: 0;
+  content: "";
+}
+
+.wrong-letter {
+  font-size: 1rem;
+  color: var(--ion-color-danger) !important;
+}
+
+.wrong-letter::after {
+  position: absolute;
+  border-bottom: 3px solid var(--ion-color-danger);
+  width: 100%;
+  bottom: 0;
+  content: "";
 }
 
 .letter-picker {
@@ -490,14 +547,10 @@ const isShownRequiredLetters = ref<boolean>(false);
   margin: 0 0.5rem;
 }
 
-.wrong-letter {
-  color: var(--ion-color-danger) !important;
-  border-color: var(--ion-color-danger);
-}
-
 .transparent {
   opacity: 0;
   cursor: default;
+  transition: opacity 0.2s ease-in-out;
 }
 
 .hints {

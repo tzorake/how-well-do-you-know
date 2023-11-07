@@ -7,7 +7,7 @@ import BackLayout from "@/layouts/BackLayout.vue";
   <back-layout title="О нас">
     <div class="about">
       <p class="about__text">
-        "Угадай мультифильм" – захватывающая игра для всех возрастов, которая
+        "Угадай мультифильм" – это захватывающая игра для всех возрастов, которая
         проверит вашу эрудицию и знания мультипликационного мира! В этой
         захватывающей головоломке игрокам предстоит погрузиться в удивительный
         мир анимации, чтобы раскрывать тайны и загадки известных мультифильмов.
@@ -27,7 +27,6 @@ import BackLayout from "@/layouts/BackLayout.vue";
 .about__text {
   margin: 1rem;
   font-size: 1.1rem;
-  text-align: center;
 }
 
 .about__authors {
