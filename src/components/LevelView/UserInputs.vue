@@ -6,7 +6,6 @@ import {
   languageOutline,
   playForwardCircleOutline,
 } from "ionicons/icons";
-import { showToast } from "@/helpers/toast";
 import AppLetter from "@/components/LevelView/AppLetter.vue";
 import { Letter } from "@/utils/Letter";
 import { LetterState } from "@/utils/LetterState";
@@ -174,7 +173,6 @@ function onShowRequiredLettersHint() {
   const aaws = lpc.actualAnswerWithoutSpaces;
   const ml = mixedLetters.value;
 
-  console.log(ml);
   ml.split("").forEach((character, index) => {
     if (!aaws.includes(character)) {
       const entry = ua
@@ -288,23 +286,18 @@ async function onClickHint(
         if (currentHint) {
           currentHint();
         }
-        if (["showLetter", "onlyRequired"].includes(mode)) {
-          showToast(`Вы получили подсказку: "${header}"`);
-        }
       },
     },
   ];
 
-  if (diamondsStore.diamonds >= price) {
-    buttons.push({
+  const canBuyHint = diamondsStore.diamonds >= price;
+  if (canBuyHint) {
+    buttons.unshift({
       text: "Купить",
       handler: () => {
         diamondsStore.setDiamonds(diamondsStore.diamonds - price);
         if (currentHint) {
           currentHint();
-        }
-        if (["showLetter", "onlyRequired"].includes(mode)) {
-          showToast(`Вы купили подсказку: "${header}"`);
         }
       },
     });
@@ -314,8 +307,11 @@ async function onClickHint(
     cssClass: "app-alert",
     header,
     subHeader: `Стоимость ${price} алмазов`,
-    message:
-      "У вас есть два варианта: либо просмотреть рекламный ролик, либо использовать ваши алмазы.",
+    message: `Для того чтобы получить подсказку, ${
+      canBuyHint
+        ? "вы можете либо просмотреть рекламный ролик, либо использовать накопленные алмазы."
+        : "вам нужно будет просмотреть рекламный ролик."
+    }`,
     buttons,
   });
 
