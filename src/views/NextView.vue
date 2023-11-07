@@ -44,7 +44,8 @@ async function onContinue() {
 <template>
   <main-layout>
     <div class="level-title">
-      <p class="level-title__text">Отлично!</p>
+      <p class="level-title__header">Поздравляем!</p>
+      <p class="level-title__content">Вы прошли на новый уровень</p>
     </div>
     <img class="level-image" alt="level-image" :src="imageSrc" />
 
@@ -78,8 +79,17 @@ async function onContinue() {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  font-size: 1.78rem;
+  justify-content: space-evenly;
+}
+
+.level-title__header {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.level-title__content {
+  font-size: 1.15rem;
+  margin: 0;
 }
 
 .level-image {

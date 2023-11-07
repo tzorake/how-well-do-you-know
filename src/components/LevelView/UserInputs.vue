@@ -511,12 +511,14 @@ const isShownRequiredLetters = ref<boolean>(false);
 .hints-container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
 }
 
 .hints__button {
   flex: 1;
   margin: 0;
+  max-width: calc(50% - 5px);
 }
 
 .letter-icon {
