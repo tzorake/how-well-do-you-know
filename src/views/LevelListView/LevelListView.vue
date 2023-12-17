@@ -9,7 +9,7 @@ import { LevelListItemState } from "@/utils/LevelListItemState";
 /* Components */
 import { IonAlert, IonGrid, IonRow, IonCol } from "@ionic/vue";
 import BackLayout from "@/layouts/BackLayout.vue";
-import LevelListItem from "@/components/LevelListView/LevelListItem.vue";
+import LevelListItem from "./LevelListItem.vue";
 
 const ionRouter = useIonRouter();
 

@@ -1,13 +1,14 @@
 <script setup lang="ts">
-import { computed, ref, watch } from "vue";
+import { computed, ref, watch, onMounted } from "vue";
 import { AlertButton, IonButton, IonIcon, alertController } from "@ionic/vue";
 import { trashOutline, playForwardCircleOutline } from "ionicons/icons";
-import AppLetter from "@/components/LevelView/AppLetter.vue";
+import AppLetter from "./AppLetter.vue";
 import { Letter } from "@/utils/Letter";
 import { LetterState } from "@/utils/LetterState";
 import { LetterPickerCollection } from "@/utils/LetterPickerCollection";
 import { useDiamondsStore } from "@/stores/diamonds";
 import { useIonRouter } from "@ionic/vue";
+import { useTriggerPopover } from "@/use/index";
 
 const diamondsStore = useDiamondsStore();
 
@@ -315,6 +316,13 @@ async function onClickHint(
 }
 
 const isShownRequiredLetters = ref<boolean>(false);
+
+const letterHint = ref<InstanceType<typeof IonButton>>();
+
+onMounted(() => {
+  const { trigger: triggerLetterHint } = useTriggerPopover(letterHint.value?.$el);
+  triggerLetterHint();
+});
 </script>
 
 <template>
@@ -387,6 +395,7 @@ const isShownRequiredLetters = ref<boolean>(false);
     <div class="hints-container">
       <!-- SHOW A LETTER -->
       <ion-button
+        ref="letterHint"
         class="hints__button"
         fill="solid"
         color="light"

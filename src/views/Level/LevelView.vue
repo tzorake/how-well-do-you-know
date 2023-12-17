@@ -11,7 +11,7 @@ import { useDiamondsStore } from "@/stores/diamonds";
 
 /* Components */
 import MainLayout from "@/layouts/MainLayout.vue";
-import UserInputs from "@/components/LevelView/UserInputs.vue";
+import UserInputs from "./UserInputs.vue";
 
 const ionRouter = useIonRouter();
 
