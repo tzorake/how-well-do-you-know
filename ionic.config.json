@@ -1,5 +1,7 @@
 {
   "name": "how-well-do-you-know",
-  "integrations": {},
+  "integrations": {
+    "capacitor": {}
+  },
   "type": "vue-vite"
 }
