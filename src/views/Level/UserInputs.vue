@@ -30,7 +30,7 @@ watch(
   () => props.userAnswer,
   () => {
     isShownRequiredLetters.value = false;
-  }
+  },
 );
 
 const rowLength = ref<number>(9);
@@ -73,11 +73,7 @@ const onAddLetter = (index: number) => {
   const letter = letters[cursor];
 
   if (cursor > -1 && letter.character === "_") {
-    const newLetter = new Letter(
-      mixedLetters.value[index],
-      index,
-      letter.state
-    );
+    const newLetter = new Letter(mixedLetters.value[index], index, letter.state);
 
     emit("update:letter-picker-state", index, true);
     emit("update:letter", cursor, newLetter);
@@ -91,11 +87,7 @@ const letterByIndex = (letters: Letter[], index: number) => {
 // converts i, j to index in the string[], where string[] words
 // i - word index, j - char index
 const flatIndex = (i: number, j: number) => {
-  return (
-    actualAnswerWords.value
-      .filter((_, idx) => idx < i)
-      .reduce((p, c) => p + c.length, 0) + j
-  );
+  return actualAnswerWords.value.filter((_, idx) => idx < i).reduce((p, c) => p + c.length, 0) + j;
 };
 
 function onShowLetterHint() {
@@ -124,27 +116,20 @@ function onShowLetterHint() {
         ch === character &&
         !ua.find(
           (letter) =>
-            letter.character === ch &&
-            letter.index === idx &&
-            letter.state === LetterState.BLOCKED
-        )
+            letter.character === ch && letter.index === idx && letter.state === LetterState.BLOCKED,
+        ),
     );
 
-  const entry = entries.find(({ idx }) =>
-      !ua.find(
-        (letter) =>
-          letter.index === idx && letter.state === LetterState.BLOCKED
-      )
+  const entry = entries.find(
+    ({ idx }) => !ua.find((letter) => letter.index === idx && letter.state === LetterState.BLOCKED),
   );
-  
+
   if (entry == null) return;
 
-  const letter = ua.find(
-    (letter) => letter.character === entry.ch && letter.index === entry.idx
-  );
+  const letter = ua.find((letter) => letter.character === entry.ch && letter.index === entry.idx);
 
   const letterIndex = ua.findIndex(
-    (letter) => letter.character === entry.ch && letter.index === entry.idx
+    (letter) => letter.character === entry.ch && letter.index === entry.idx,
   );
 
   if (letter != null) {
@@ -153,11 +138,7 @@ function onShowLetterHint() {
   }
 
   emit("update:letter-picker-state", entry.idx, true);
-  emit(
-    "update:letter",
-    uaIndex,
-    new Letter(character, entry.idx, LetterState.BLOCKED)
-  );
+  emit("update:letter", uaIndex, new Letter(character, entry.idx, LetterState.BLOCKED));
 }
 
 function onShowRequiredLettersHint() {
@@ -172,10 +153,7 @@ function onShowRequiredLettersHint() {
     if (!aaws.includes(character)) {
       const entry = ua
         .map((letter, idx) => ({ letter, idx }))
-        .find(
-          ({ letter, idx }) =>
-            letter.index === idx && letter.state !== LetterState.BLOCKED
-        );
+        .find(({ letter, idx }) => letter.index === idx && letter.state !== LetterState.BLOCKED);
       if (entry != null) {
         emit("update:letter", entry.idx, new Letter("_", -1));
       }
@@ -251,9 +229,7 @@ function onCompleteLevelHint() {
 /**
  * Функция обработки нажатия на подсказку
  */
-async function onClickHint(
-  mode: "showLetter" | "onlyRequired" | "completeLevel"
-) {
+async function onClickHint(mode: "showLetter" | "onlyRequired" | "completeLevel") {
   let currentHint: () => void;
   let price: number;
   let header: string;
@@ -317,45 +293,34 @@ async function onClickHint(
 }
 
 const isShownRequiredLetters = ref<boolean>(false);
-
 </script>
 
 <template>
   <!-- USER-ANSWER -->
   <div class="user-answer">
-    <span
-      v-for="(word, wordIndex) in actualAnswerWords"
-      :key="wordIndex"
-      class="word"
-    >
+    <span v-for="(word, wordIndex) in actualAnswerWords" :key="wordIndex" class="word">
       <span
         v-for="(_, charIndex) in word"
         :key="`${wordIndex},${charIndex}`"
         @click="onRemoveLetter(flatIndex(wordIndex, charIndex))"
         :class="{
           'inplace-letter':
-            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex))
-              .state !== LetterState.BLOCKED &&
-            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex))
-              .character !== '_',
+            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex)).state !==
+              LetterState.BLOCKED &&
+            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex)).character !== '_',
           'blocked-letter':
-            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex))
-              .state === LetterState.BLOCKED &&
-            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex))
-              .character !== '_',
+            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex)).state ===
+              LetterState.BLOCKED &&
+            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex)).character !== '_',
           'wrong-letter':
-            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex))
-              .state !== LetterState.BLOCKED &&
+            letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex)).state !==
+              LetterState.BLOCKED &&
             !Letter.toString(props.userAnswer).includes('_') &&
-            Letter.toString(props.userAnswer) !==
-              letterPickerCollection.actualAnswerWithoutSpaces,
+            Letter.toString(props.userAnswer) !== letterPickerCollection.actualAnswerWithoutSpaces,
         }"
         class="letter-placeholder"
       >
-        {{
-          letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex))
-            .character
-        }}
+        {{ letterByIndex(props.userAnswer, flatIndex(wordIndex, charIndex)).character }}
       </span>
     </span>
   </div>
@@ -370,7 +335,7 @@ const isShownRequiredLetters = ref<boolean>(false);
       <AppLetter
         v-for="(character, charIndex) in mixedLetters.slice(
           rowIndex * rowLength,
-          (rowIndex + 1) * rowLength
+          (rowIndex + 1) * rowLength,
         )"
         :key="charIndex"
         :style="{
@@ -420,11 +385,7 @@ const isShownRequiredLetters = ref<boolean>(false);
         @click="onClickHint('completeLevel')"
       >
         Пройти
-        <ion-icon
-          slot="end"
-          size="large"
-          :icon="playForwardCircleOutline"
-        ></ion-icon>
+        <ion-icon slot="end" size="large" :icon="playForwardCircleOutline"></ion-icon>
       </ion-button>
     </div>
   </div>
@@ -534,7 +495,7 @@ const isShownRequiredLetters = ref<boolean>(false);
 }
 
 .letter-picker {
-  height: 15%;
+  height: 17%;
   display: flex;
   flex-direction: column;
   justify-content: center;

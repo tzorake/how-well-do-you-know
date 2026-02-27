@@ -24,7 +24,6 @@ const levelsStore = useLevelsStore();
 
 <template>
   <ion-page>
-    <!-- HEADER -->
     <ion-header>
       <ion-toolbar color="primary">
         <ion-buttons slot="start">
@@ -43,16 +42,14 @@ const levelsStore = useLevelsStore();
       </ion-toolbar>
     </ion-header>
 
-    <!-- CONTENT -->
-    <ion-content :scroll-y="false">
-      <ion-grid class="ion-no-padding" style="height: 100%" fixed>
-        <ion-row class="ion-justify-content-center" style="height: 100%">
+    <ion-content >
+      <ion-grid class="ion-no-padding size-full sm:h-[1100px]" fixed>
+        <ion-row class="ion-justify-content-center h-full  m-auto">
           <ion-col
             size="12"
             sizeMd="8"
             sizeLg="6"
             sizeXl="4"
-            style="display: flex; flex-direction: column; height: 100%"
           >
             <slot />
           </ion-col>
@@ -61,5 +58,3 @@ const levelsStore = useLevelsStore();
     </ion-content>
   </ion-page>
 </template>
-
-<style scoped></style>

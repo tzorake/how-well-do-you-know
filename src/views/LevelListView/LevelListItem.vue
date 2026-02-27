@@ -56,6 +56,7 @@ const props = defineProps({
   position: relative;
   user-select: none;
   cursor: pointer;
+  margin: 4px;
 }
 
 .text {
