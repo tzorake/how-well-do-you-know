@@ -49,7 +49,7 @@ onBeforeMount(async () => {
   <ion-app v-if="initialized">
     <ion-menu content-id="main-content">
       <ion-header>
-        <ion-toolbar color="primary">
+        <ion-toolbar color="tertiary">
           <ion-title>Меню</ion-title>
         </ion-toolbar>
       </ion-header>

@@ -11,6 +11,7 @@ export const useDiamondsStore = defineStore("diamonds", () => {
     const { value: storageDiamonds } = await Preferences.get({
       key: "diamonds",
     });
+
     if (storageDiamonds) {
       diamonds.value = Number(storageDiamonds);
     }
@@ -18,6 +19,7 @@ export const useDiamondsStore = defineStore("diamonds", () => {
 
   async function setDiamonds(newDiamonds: number) {
     diamonds.value = newDiamonds;
+    
     await Preferences.set({
       key: "diamonds",
       value: String(newDiamonds),

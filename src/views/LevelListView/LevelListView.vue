@@ -60,13 +60,15 @@ async function onItemClicked(index: number) {
           sizeLg="1"
           sizeXl="1"
           v-for="(item, index) in levels"
+          :key="index"
         >
           <LevelListItem
             :imageSrc="item.image"
             :state="itemState(index)"
             @click="onItemClicked(index)"
-            >{{ index + 1 }}</LevelListItem
-          >
+            >
+            {{ index + 1 }}
+            </LevelListItem>
         </ion-col>
       </ion-row>
     </ion-grid>

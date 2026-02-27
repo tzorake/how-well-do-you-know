@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from "vue";
+import { computed, ref, watch } from "vue";
 import { AlertButton, IonButton, IonIcon, alertController } from "@ionic/vue";
 import { trashOutline, playForwardCircleOutline } from "ionicons/icons";
 import AppLetter from "./AppLetter.vue";
@@ -8,7 +8,6 @@ import { LetterState } from "@/utils/LetterState";
 import { LetterPickerCollection } from "@/utils/LetterPickerCollection";
 import { useDiamondsStore } from "@/stores/diamonds";
 import { useIonRouter } from "@ionic/vue";
-import { useTriggerPopover } from "@/use/index";
 
 const diamondsStore = useDiamondsStore();
 
@@ -131,21 +130,23 @@ function onShowLetterHint() {
         )
     );
 
-  const entry = entries.find(
-    ({ ch, idx }) =>
+  const entry = entries.find(({ idx }) =>
       !ua.find(
-        (letter, index) =>
+        (letter) =>
           letter.index === idx && letter.state === LetterState.BLOCKED
       )
   );
+  
   if (entry == null) return;
 
   const letter = ua.find(
     (letter) => letter.character === entry.ch && letter.index === entry.idx
   );
+
   const letterIndex = ua.findIndex(
     (letter) => letter.character === entry.ch && letter.index === entry.idx
   );
+
   if (letter != null) {
     emit("update:letter-picker-state", ua[letterIndex].index, false);
     emit("update:letter", letterIndex, new Letter("_", -1));
@@ -253,7 +254,7 @@ function onCompleteLevelHint() {
 async function onClickHint(
   mode: "showLetter" | "onlyRequired" | "completeLevel"
 ) {
-  let currentHint: Function;
+  let currentHint: () => void;
   let price: number;
   let header: string;
   switch (mode) {
@@ -317,12 +318,6 @@ async function onClickHint(
 
 const isShownRequiredLetters = ref<boolean>(false);
 
-const letterHint = ref<InstanceType<typeof IonButton>>();
-
-onMounted(() => {
-  const { trigger: triggerLetterHint } = useTriggerPopover(letterHint.value?.$el);
-  triggerLetterHint();
-});
 </script>
 
 <template>

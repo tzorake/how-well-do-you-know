@@ -22,6 +22,7 @@ export const useLevelsStore = defineStore("levels", () => {
       key: "level-index",
       value: String(index),
     });
+    
     currentLevelIndex.value = index;
   }
 
@@ -30,11 +31,13 @@ export const useLevelsStore = defineStore("levels", () => {
       key: "last-available-level-index",
       value: String(index),
     });
+
     lastAvailableLevelIndex.value = index;
   }
 
   async function fetchLevels() {
     const response = await useFetchJson<ILevels>("/levels/levels.json");
+
     if (response.data) {
       levelsInfo.value = response.data;
     }
@@ -42,6 +45,7 @@ export const useLevelsStore = defineStore("levels", () => {
 
   async function fetchCurrentLevelIndex() {
     const { value } = await Preferences.get({ key: "level-index" });
+
     if (value) {
       currentLevelIndex.value = Number(value);
     }
@@ -51,6 +55,7 @@ export const useLevelsStore = defineStore("levels", () => {
     const { value } = await Preferences.get({
       key: "last-available-level-index",
     });
+
     if (value) {
       lastAvailableLevelIndex.value = Number(value);
     }

@@ -44,6 +44,7 @@ watch(
     const letters = Letter.toLetters(word).map(
       (letter) => new Letter(letter.character, -1, letter.state)
     );
+
     if (opened.value != null && opened.value instanceof Array) {
       letters.forEach((letter, index) => {
         if (opened.value.includes(index)) {
@@ -85,14 +86,13 @@ function onLetterPickerStateChanged(index: number, state: boolean) {
       </p>
     </div>
     <img class="level-image" alt="level-image" :src="imageSrc" />
-
-    <UserInputs
+    <user-inputs
       :user-answer="userAnswer"
       @update:letter="onLetterChanged"
       :letter-picker-collection="letterPickerCollection"
       @update:letter-picker-state="onLetterPickerStateChanged"
     >
-    </UserInputs>
+    </user-inputs>
   </main-layout>
 </template>
 

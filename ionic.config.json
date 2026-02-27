@@ -1,7 +1,5 @@
 {
-  "name": "my-app",
-  "integrations": {
-    "capacitor": {}
-  },
+  "name": "how-well-do-you-know",
+  "integrations": {},
   "type": "vue-vite"
 }
